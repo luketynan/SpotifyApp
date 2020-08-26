@@ -1,5 +1,3 @@
-// Put fake data into App() function instead of outside
-
 import React, { Component } from 'react';
 import './App.css';
 
@@ -7,7 +5,10 @@ let borderCurve = '2vw';
 let accentColor = '#AAAAAA';
 let frameBackgroundColor = '#C4C4C4';
 let defaultSectionStyle = {
-  padding: '2vw'
+  margin: '2vw',
+  padding: '0 2vw 2vw 2vw',
+  'border-bottom-style': 'solid',
+  'border-color': accentColor
 }
 let defaultFrameStyle = {
   'background-color': frameBackgroundColor,
@@ -16,7 +17,11 @@ let defaultFrameStyle = {
 }
 let defaultDataSectionStyle = {
   ...defaultFrameStyle,
-  flex: '1 3 25%'
+  flex: '0 0 28%'
+}
+let favouriteListItemStyle = {
+  'list-style': 'none',
+  'line-height': '100px'
 }
 
 let fakeSongs =  [
@@ -43,16 +48,30 @@ let fakeSongs =  [
 let fakeUserData = {
   profilePicture: 'https://breathingspacedc.com/wp-content/uploads/Bubbles-Lumppini-Fotolia-1080x675.jpg',
   userName: 'Joe Blogs',
-  currentTrack: fakeSongs[2],
+  currentTrack: fakeSongs[0],
   currentProgress: '50',
   topArtists: [],
   topPlaylists: [],
   topTracks: [fakeSongs]
 }
 
+class LoadingPlaceHolder extends Component {
+  render() {
+    return (
+      <div style={{
+        'text-align': 'center',
+        'align-items': 'center'
+      }}>
+        Loading...
+      </div>
+    )
+  }
+}
+
 class CurrentlyPlaying extends Component {
   render() {
     return (
+      fakeUserData.currentTrack ?
       <div style={{...defaultFrameStyle}}>
         <h2 style={{
           'text-align': 'center',
@@ -113,6 +132,10 @@ class CurrentlyPlaying extends Component {
             </div>
         </div>
       </div>
+      
+      :
+
+      <LoadingPlaceHolder/>
     )
   }
 }
@@ -122,6 +145,11 @@ class FavouriteArtists extends Component {
     return (
       <div style={{...defaultDataSectionStyle}}>
         <h2>Artists</h2>
+        <ul style={{...favouriteListItemStyle}}>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+        </ul>
       </div>
     )
   }
@@ -132,6 +160,11 @@ class FavouritePlaylists extends Component {
     return (
       <div style={{...defaultDataSectionStyle}}>
         <h2>Playlists</h2>
+        <ul style={{...favouriteListItemStyle}}>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+        </ul>
       </div>
     )
   }
@@ -142,29 +175,11 @@ class FavouriteTracks extends Component {
     return (
       <div style={{...defaultDataSectionStyle}}>
         <h2>Tracks</h2>
-      </div>
-    )
-  }
-}
-
-class FavouritesSection extends Component {
-  render() {
-    return (
-      <div style={{
-        'text-align': 'center',
-        height: '150px'
-      }}>
-        <h1>Your Favourites</h1>
-        <div style={{
-          display: 'flex',
-          'flex-direction': 'row',
-          'flex-wrap': 'wrap',
-          'justify-content': 'space-around'
-        }}>
-          <FavouriteArtists/>
-          <FavouritePlaylists/>
-          <FavouriteTracks/>
-        </div>
+        <ul style={{...favouriteListItemStyle}}>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+          <li>Favourite Item</li>
+        </ul>
       </div>
     )
   }
@@ -174,7 +189,7 @@ function App() {
   return (
     fakeUserData.userName ?
       <div>
-        <div>
+        <div style={{...defaultSectionStyle}}>
           <figure style={{
             display: 'none'
           }}>
@@ -185,8 +200,7 @@ function App() {
             src={fakeUserData.profilePicture}/>
           </figure>
           
-          <div style={{...defaultSectionStyle
-          }}>
+          <div>
             <h2 style={{
               'border-bottom': 'solid 2px',
               'border-color': accentColor,
@@ -199,20 +213,26 @@ function App() {
           </div>
         </div>
 
-        <div style={{...defaultSectionStyle}}>
-          <FavouritesSection/>
+
+        <div style={{...defaultSectionStyle,
+          'text-align': 'center'
+        }}>
+          <h1>Your Favourites</h1>
+          <div style={{
+            display: 'flex',
+            'flex-direction': 'row',
+            'flex-wrap': 'wrap',
+            'justify-content': 'space-between'
+          }}>
+            <FavouriteArtists/>
+            <FavouritePlaylists/>
+            <FavouriteTracks/>
+          </div>
         </div>
-      </div> 
-      
+      </div>
       : 
       
-      <div style={{
-        background: 'white',
-        'text-align': 'center',
-        'align-items': 'center'
-      }}>
-        Loading your data...
-      </div>
+      <LoadingPlaceHolder/>
   );
 }
 
