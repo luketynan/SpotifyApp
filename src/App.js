@@ -1,3 +1,6 @@
+// Put fake data into App() function instead of outside
+// pass in the data each component needs (make dataSection more flexible?)
+
 import React, { Component } from 'react';
 import './App.css';
 
@@ -102,6 +105,44 @@ class FavouriteTracks extends Component {
   }
 }
 
+class FavouriteSection extends Component {
+  render() {
+    return (
+      <div style={{
+        margin: 'auto',
+        padding: '20px',
+        'line-height': '100px'
+      }}>
+        <h2>Favourite Section</h2>
+        <ul>
+          <li>Item 1</li>
+          <li>Item 2</li>
+          <li>Item 3</li>
+          <li>Item 4</li>
+        </ul>
+      </div>
+    )
+  }
+}
+
+class Favourites extends Component {
+  render() {
+    return (
+      <div style={{
+        display: 'flex',
+        'flex-direction': 'row',
+        'text-align': 'auto'
+      }}>
+        <FavouriteSection/>
+        
+        <FavouriteSection/>
+        
+        <FavouriteSection/>
+      </div>
+    )
+  }
+}
+
 function App() {
   return (
     <div>
@@ -117,11 +158,16 @@ function App() {
         <p>---------------------------------------------------</p>
         <CurrentlyPlaying/>
         <p>---------------------------------------------------</p>
+        <div>
+          <h1 style={{
+            'text-align': 'center'
+          }}>
+            Your Favourites
+          </h1>
+          <Favourites/>
+        </div>
       </div>
-        <h1>Your Favourites</h1>
-        <FavouriteArtists/>
-        <FavouritePlaylists/>
-        <FavouriteTracks/>
+        
     </div>
   );
 }
