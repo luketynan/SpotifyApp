@@ -7,12 +7,12 @@ let frameBackgroundColor = '#C4C4C4';
 let defaultSectionStyle = {
   margin: '2vw',
   padding: '0 2vw 2vw 2vw',
-  'border-bottom-style': 'solid',
-  'border-color': accentColor
+  borderBottom: 'solid',
+  borderColor: accentColor
 }
 let defaultFrameStyle = {
-  'background-color': frameBackgroundColor,
-  'border-radius': borderCurve,
+  backgroundColor: frameBackgroundColor,
+  borderRadius: borderCurve,
   padding: '2vw'
 }
 let defaultDataSectionStyle = {
@@ -20,8 +20,8 @@ let defaultDataSectionStyle = {
   flex: '0 0 28%'
 }
 let favouriteListItemStyle = {
-  'list-style': 'none',
-  'line-height': '100px'
+  listStyle: 'none',
+  lineHeight: '100px'
 }
 
 let fakeSongs =  [
@@ -59,8 +59,8 @@ class LoadingPlaceHolder extends Component {
   render() {
     return (
       <div style={{
-        'text-align': 'center',
-        'align-items': 'center'
+        textAlign: 'center',
+        alignItems: 'center'
       }}>
         Loading...
       </div>
@@ -74,7 +74,7 @@ class CurrentlyPlaying extends Component {
       fakeUserData.currentTrack ?
       <div style={{...defaultFrameStyle}}>
         <h2 style={{
-          'text-align': 'center',
+          textAlign: 'center',
           width: 'fit-content',
           margin: 'auto',
           display: 'block'
@@ -84,45 +84,45 @@ class CurrentlyPlaying extends Component {
 
         <div style={{
           display: 'flex',
-          'flex-direction': 'row',
-          'justify-content': 'space-around'
+          flexDirection: 'row',
+          justifyContent: 'space-around'
         }}>
           <div style={{
-              'text-align': 'center',
+              textAlign: 'center',
               width: '20%',
               margin: '2vw'
             }}>
             <figure>
               <img style={{
                 width: '70%',
-                'border-radius': borderCurve
+                borderRadius: borderCurve
               }} 
               src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'
               />
               <figcaption style={{
-                'font-weight': 'bold'
+                fontWeight: 'bold'
               }}>{fakeUserData.currentTrack.album}</figcaption>
             </figure>
           </div>
           
           <div style={{
-            'text-align': 'center',
+            textAlign: 'center',
             width: '70%',
             display: 'flex',
-            'flex-direction': 'row',
-            'align-items': 'center',
-            'justify-content': 'space-around'
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-around'
           }}>
-            <p style={{'font-size': '2vw', 'font-weight': 'bold'}}>{fakeUserData.currentTrack.name}</p>
-            <p style={{'font-size': '2vw'}}>{fakeUserData.currentTrack.artists}</p>
+            <p style={{fontSize: '2vw', fontWeight: 'bold'}}>{fakeUserData.currentTrack.name}</p>
+            <p style={{fontSize: '2vw'}}>{fakeUserData.currentTrack.artists}</p>
           </div>
         </div>
-        <div style={{'text-align': 'center'}}>
+        <div style={{textAlign: 'center'}}>
           <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p> 
             <div style={{
               backgroundColor: accentColor,
               color: 'white',
-              'border-radius': '2vw',
+              borderRadius: '2vw',
               width: '80%',
               margin: ' 1.5vw auto auto auto',
               padding: '5px',
@@ -194,7 +194,7 @@ function App() {
             display: 'none'
           }}>
             <img style= {{
-              'border-radius': borderCurve,
+              borderRadius: borderCurve,
               width: '100%'
             }}
             src={fakeUserData.profilePicture}/>
@@ -202,10 +202,10 @@ function App() {
           
           <div>
             <h2 style={{
-              'border-bottom': 'solid 2px',
-              'border-color': accentColor,
-              'padding-bottom': '5px',
-              'margin-bottom': '10px'
+              borderBottom: 'solid 2px',
+              borderColor: accentColor,
+              paddingBottom: '5px',
+              marginBottom: '10px'
             }}>
               {fakeUserData.userName}
             </h2>
@@ -215,14 +215,14 @@ function App() {
 
 
         <div style={{...defaultSectionStyle,
-          'text-align': 'center'
+          textAlign: 'center'
         }}>
           <h1>Your Favourites</h1>
           <div style={{
             display: 'flex',
-            'flex-direction': 'row',
-            'flex-wrap': 'wrap',
-            'justify-content': 'space-between'
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between'
           }}>
             <FavouriteArtists/>
             <FavouritePlaylists/>
