@@ -1,10 +1,23 @@
 // Put fake data into App() function instead of outside
-// pass in the data each component needs (make dataSection more flexible?)
 
 import React, { Component } from 'react';
 import './App.css';
 
-let borderCurve = '1vw';
+let borderCurve = '2vw';
+let accentColor = '#AAAAAA';
+let frameBackgroundColor = '#C4C4C4';
+let defaultSectionStyle = {
+  padding: '2vw'
+}
+let defaultFrameStyle = {
+  'background-color': frameBackgroundColor,
+  'border-radius': borderCurve,
+  padding: '2vw'
+}
+let defaultDataSectionStyle = {
+  ...defaultFrameStyle,
+  flex: '1 3 25%'
+}
 
 let fakeSongs =  [
   {
@@ -27,48 +40,77 @@ let fakeSongs =  [
     album: 'Funky Friday'
   }
 ]
-
 let fakeUserData = {
   profilePicture: 'https://breathingspacedc.com/wp-content/uploads/Bubbles-Lumppini-Fotolia-1080x675.jpg',
   userName: 'Joe Blogs',
-  currentTrack: fakeSongs[0],
+  currentTrack: fakeSongs[2],
   currentProgress: '50',
   topArtists: [],
   topPlaylists: [],
   topTracks: [fakeSongs]
-};
+}
 
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      <div>
+      <div style={{...defaultFrameStyle}}>
+        <h2 style={{
+          'text-align': 'center',
+          width: 'fit-content',
+          margin: 'auto',
+          display: 'block'
+        }}>
+          Currently Playing
+        </h2>
 
-        <h2>Currently Playing</h2>
-
-        <div>
-          <img style={{
-            width: '10%',
-            'border-radius': borderCurve
-          }} 
-          src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'/>
-          <p>{fakeUserData.currentTrack.album}</p>
-        </div>
+        <div style={{
+          display: 'flex',
+          'flex-direction': 'row',
+          'justify-content': 'space-around'
+        }}>
+          <div style={{
+              'text-align': 'center',
+              width: '20%',
+              margin: '2vw'
+            }}>
+            <figure>
+              <img style={{
+                width: '70%',
+                'border-radius': borderCurve
+              }} 
+              src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'
+              />
+              <figcaption style={{
+                'font-weight': 'bold'
+              }}>{fakeUserData.currentTrack.album}</figcaption>
+            </figure>
+          </div>
           
-        <p><span>{fakeUserData.currentTrack.name}</span> - <span>{fakeUserData.currentTrack.artists}</span></p>
-        
-        <div>
-          <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p>  
-          <p style={{
-              backgroundColor: '#ffffff',
+          <div style={{
+            'text-align': 'center',
+            width: '70%',
+            display: 'flex',
+            'flex-direction': 'row',
+            'align-items': 'center',
+            'justify-content': 'space-around'
+          }}>
+            <p style={{'font-size': '2vw', 'font-weight': 'bold'}}>{fakeUserData.currentTrack.name}</p>
+            <p style={{'font-size': '2vw'}}>{fakeUserData.currentTrack.artists}</p>
+          </div>
+        </div>
+        <div style={{'text-align': 'center'}}>
+          <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p> 
+            <div style={{
+              backgroundColor: accentColor,
+              color: 'white',
               'border-radius': '2vw',
-              width: '70%',
-              margin: 'auto',
+              width: '80%',
+              margin: ' 1.5vw auto auto auto',
               padding: '5px',
-              'text-align': 'center'
             }}>
 
-            //////////////////////////////
-          </p>
+              \\\\\\ Progress Bar //////
+            </div>
         </div>
       </div>
     )
@@ -78,8 +120,8 @@ class CurrentlyPlaying extends Component {
 class FavouriteArtists extends Component {
   render() {
     return (
-      <div>
-        <h2>Favourite Artists</h2>
+      <div style={{...defaultDataSectionStyle}}>
+        <h2>Artists</h2>
       </div>
     )
   }
@@ -88,8 +130,8 @@ class FavouriteArtists extends Component {
 class FavouritePlaylists extends Component {
   render() {
     return (
-      <div>
-        <h2>Favourite Artists</h2>
+      <div style={{...defaultDataSectionStyle}}>
+        <h2>Playlists</h2>
       </div>
     )
   }
@@ -98,46 +140,31 @@ class FavouritePlaylists extends Component {
 class FavouriteTracks extends Component {
   render() {
     return (
-      <div>
-        <h2>Favourite Tracks</h2>
+      <div style={{...defaultDataSectionStyle}}>
+        <h2>Tracks</h2>
       </div>
     )
   }
 }
 
-class FavouriteSection extends Component {
+class FavouritesSection extends Component {
   render() {
     return (
       <div style={{
-        margin: 'auto',
-        padding: '20px',
-        'line-height': '100px'
+        'text-align': 'center',
+        height: '150px'
       }}>
-        <h2>Favourite Section</h2>
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-          <li>Item 3</li>
-          <li>Item 4</li>
-        </ul>
-      </div>
-    )
-  }
-}
-
-class Favourites extends Component {
-  render() {
-    return (
-      <div style={{
-        display: 'flex',
-        'flex-direction': 'row',
-        'text-align': 'auto'
-      }}>
-        <FavouriteSection/>
-        
-        <FavouriteSection/>
-        
-        <FavouriteSection/>
+        <h1>Your Favourites</h1>
+        <div style={{
+          display: 'flex',
+          'flex-direction': 'row',
+          'flex-wrap': 'wrap',
+          'justify-content': 'space-around'
+        }}>
+          <FavouriteArtists/>
+          <FavouritePlaylists/>
+          <FavouriteTracks/>
+        </div>
       </div>
     )
   }
@@ -145,30 +172,47 @@ class Favourites extends Component {
 
 function App() {
   return (
-    <div>
-      <img style= {{
-        width: '20%',
-        'border-radius': borderCurve,
-        display: 'inline'
-      }}
-      src={fakeUserData.profilePicture}/>
-
+    fakeUserData.userName ?
       <div>
-        <h2>Profile Name</h2>
-        <p>---------------------------------------------------</p>
-        <CurrentlyPlaying/>
-        <p>---------------------------------------------------</p>
         <div>
-          <h1 style={{
-            'text-align': 'center'
+          <figure style={{
+            display: 'none'
           }}>
-            Your Favourites
-          </h1>
-          <Favourites/>
+            <img style= {{
+              'border-radius': borderCurve,
+              width: '100%'
+            }}
+            src={fakeUserData.profilePicture}/>
+          </figure>
+          
+          <div style={{...defaultSectionStyle
+          }}>
+            <h2 style={{
+              'border-bottom': 'solid 2px',
+              'border-color': accentColor,
+              'padding-bottom': '5px',
+              'margin-bottom': '10px'
+            }}>
+              {fakeUserData.userName}
+            </h2>
+            <CurrentlyPlaying/>
+          </div>
         </div>
+
+        <div style={{...defaultSectionStyle}}>
+          <FavouritesSection/>
+        </div>
+      </div> 
+      
+      : 
+      
+      <div style={{
+        background: 'white',
+        'text-align': 'center',
+        'align-items': 'center'
+      }}>
+        Loading your data...
       </div>
-        
-    </div>
   );
 }
 
