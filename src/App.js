@@ -175,10 +175,23 @@ class App extends Component {
     }).then((response) => response.json())
     .then((data) => {
       this.setState({serverData: {user: {name: data.display_name, profileLink: data.external_urls.spotify}}});
+      console.log(data.external_urls.spotify)
       console.log(data);
       console.log(this.state.serverData);
     })
+
+
+    fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=5&offset=1', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then((response) => response.json())
+    .then((data) => {
+      // this.setState({serverData: {user: {name: data.display_name, profileLink: data.external_urls.spotify}}});
+      console.log(data)
+    })
   }
+
+
+ 
 
   render() {
     return (
@@ -207,8 +220,10 @@ class App extends Component {
               }}
                 src=''/>
                 <figcaption className="outside"><a href={this.state.serverData.user.profileLink}>{this.state.serverData.user.name}</a></figcaption>
+                
               </figure>
               <CurrentlyPlaying/>
+              
             </div>
           </div>
   
@@ -229,9 +244,9 @@ class App extends Component {
             </div>
           </div>
         </div>
-        : 
+        : <button onClick={()=>window.location='http://localhost:8888/login'} style={{padding:'20px', 'fontsize': '50px', 'margin-top': '20px',}}Sign In With Spotify></button>
         
-        <LoginPage/>
+        // <LoginPage/>
     )
   }
 }
