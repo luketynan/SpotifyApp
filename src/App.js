@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 
 let borderCurve = '2vw';
-let accentColor = '#AAAAAA';
-let frameBackgroundColor = '#C4C4C4';
+let accentColor = '#3489aa';
+let frameBackgroundColor = '#ff7034 ';
 let defaultSectionStyle = {
   margin: '2vw',
   padding: '0 2vw 2vw 2vw',
@@ -13,7 +13,7 @@ let defaultSectionStyle = {
 let defaultFrameStyle = {
   backgroundColor: frameBackgroundColor,
   borderRadius: borderCurve,
-  padding: '2vw'
+  padding: '1vw'
 }
 let defaultDataSectionStyle = {
   ...defaultFrameStyle,
@@ -48,7 +48,7 @@ let fakeSongs =  [
 let fakeUserData = {
   profilePicture: 'https://breathingspacedc.com/wp-content/uploads/Bubbles-Lumppini-Fotolia-1080x675.jpg',
   userName: 'Joe Blogs',
-  currentTrack: fakeSongs[0],
+  currentTrack: fakeSongs[2],
   currentProgress: '50',
   topArtists: [],
   topPlaylists: [],
@@ -85,13 +85,12 @@ class CurrentlyPlaying extends Component {
         <div style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-around'
+          justifyContent: 'center'
         }}>
           <div style={{
               textAlign: 'center',
-              width: '20%',
-              margin: '2vw'
-            }}>
+              width: '20%'
+          }}>
             <figure>
               <img style={{
                 width: '70%',
@@ -107,28 +106,27 @@ class CurrentlyPlaying extends Component {
           
           <div style={{
             textAlign: 'center',
-            width: '70%',
+            width: '50%',
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-around'
           }}>
-            <p style={{fontSize: '2vw', fontWeight: 'bold'}}>{fakeUserData.currentTrack.name}</p>
-            <p style={{fontSize: '2vw'}}>{fakeUserData.currentTrack.artists}</p>
+            <p style={{fontWeight: 'bold'}}>{fakeUserData.currentTrack.name}</p>
+            <p>{fakeUserData.currentTrack.artists}</p>
           </div>
         </div>
         <div style={{textAlign: 'center'}}>
           <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p> 
             <div style={{
               backgroundColor: accentColor,
-              color: 'white',
+              color: 'black',
               borderRadius: '2vw',
               width: '80%',
-              margin: ' 1.5vw auto auto auto',
-              padding: '5px',
+              height: '.4em',
+              margin: '.5em auto auto auto',
+              padding: '.2em',
             }}>
-
-              \\\\\\ Progress Bar //////
             </div>
         </div>
       </div>
@@ -189,26 +187,30 @@ function App() {
   return (
     fakeUserData.userName ?
       <div>
-        <div style={{...defaultSectionStyle}}>
-          <figure style={{
-            display: 'none'
-          }}>
-            <img style= {{
-              borderRadius: borderCurve,
-              width: '100%'
-            }}
-            src={fakeUserData.profilePicture}/>
-          </figure>
+        <div style={{...defaultSectionStyle,
           
+        }}>
+          <figure style={{
+          }}>
+            
+          </figure>
           <div>
-            <h2 style={{
+            <figure style={{
+              display: 'flex',
+              flexDirection: 'row',
               borderBottom: 'solid 2px',
               borderColor: accentColor,
               paddingBottom: '5px',
               marginBottom: '10px'
             }}>
-              {fakeUserData.userName}
-            </h2>
+              <img style= {{
+              borderRadius: '.2em',
+              width: '2em',
+              margin: '0 .5em'
+            }}
+              src={fakeUserData.profilePicture}/>
+              <figcaption className="outside">{fakeUserData.userName}</figcaption>
+            </figure>
             <CurrentlyPlaying/>
           </div>
         </div>
