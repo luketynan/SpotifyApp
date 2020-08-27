@@ -168,13 +168,12 @@ class App extends Component {
 
   componentDidMount() {
     let accessToken = queryString.parse(window.location.search).access_token;
-    console.log(accessToken);
 
     fetch('https://api.spotify.com/v1/me', {
       headers: {'Authorization': 'Bearer ' + accessToken}
     }).then((response) => response.json())
     .then((data) => {
-      this.setState({serverData: {user: {name: data.display_name, profileLink: data.external_urls.spotify}}});
+      this.setState({serverData: {user: {name: data.display_name}}});
       console.log(data);
       console.log(this.state.serverData);
     })
@@ -182,56 +181,48 @@ class App extends Component {
 
   render() {
     return (
-      this.state.serverData.user ?
-        <div>
-          <div style={{...defaultSectionStyle,
-            
+      console.log(queryString.parse(window.location.search).access_token),
+      queryString.parse(window.location.search).access_token === undefined ?
+      <LoginPage/>
+      :
+      <div className="App">
+        <div style={{...defaultSectionStyle
+        }}>
+          <figure style={{
+            display: 'flex',
+            flexDirection: 'row',
+            borderBottom: 'solid 2px',
+            borderColor: accentColor,
+            paddingBottom: '5px',
+            marginBottom: '10px'
           }}>
-            <figure style={{
-            }}>
-              
-            </figure>
-            <div>
-              <figure style={{
-                display: 'flex',
-                flexDirection: 'row',
-                borderBottom: 'solid 2px',
-                borderColor: accentColor,
-                paddingBottom: '5px',
-                marginBottom: '10px'
-              }}>
-                <img style= {{
-                borderRadius: '.2em',
-                width: '2em',
-                margin: '0 .5em'
-              }}
-                src=''/>
-                <figcaption className="outside"><a href={this.state.serverData.user.profileLink}>{this.state.serverData.user.name}</a></figcaption>
-              </figure>
-              <CurrentlyPlaying/>
-            </div>
-          </div>
+            <img style= {{
+            borderRadius: '.2em',
+            width: '2em',
+            margin: '0 .5em'
+            }}
+              src=''/>
+            <figcaption className="outside">{this.state.serverData.user ? this.state.serverData.user.name : '---'}</figcaption>
+          </figure>
+          <CurrentlyPlaying/>
+        </div>
   
-  
-          <div style={{...defaultSectionStyle,
-            textAlign: 'center'
+        <div style={{...defaultSectionStyle,
+          textAlign: 'center'
+        }}>
+          <h1>Your Favourites</h1>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between'
           }}>
-            <h1>Your Favourites</h1>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between'
-            }}>
-              <FavouriteArtists/>
-              <FavouritePlaylists/>
-              <FavouriteTracks/>
-            </div>
+            <FavouriteArtists/>
+            <FavouritePlaylists/>
+            <FavouriteTracks/>
           </div>
         </div>
-        : 
-        
-        <LoginPage/>
+      </div>
     )
   }
 }
