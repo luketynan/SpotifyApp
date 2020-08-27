@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import queryString from 'query-string';
 
 let borderCurve = '2vw';
 let accentColor = '#3489aa';
@@ -24,35 +25,14 @@ let favouriteListItemStyle = {
   lineHeight: '100px'
 }
 
-let fakeSongs =  [
-  {
-    name: 'I Spy',
-    totalSeconds: '272',
-    currentSeconds: '0',
-    artists: 'Krept & Konan, Headie One, K-Trap',
-    album: 'Revenge is Sweet'
-  },
-  {
-    name: 'Can You Hear Me?',
-    totalSeconds: '233',
-    artists: 'Wiley, Jme, Ms D, Skepta',
-    album: 'The Ascent'
-  },
-  {
-    name: 'Funky Friday',
-    totalSeconds: '183',
-    artists: 'Dave, Fredo',
-    album: 'Funky Friday'
+class LoginPage extends Component {
+  render() {
+    return (
+      <div>
+        <button onClick={() => window.location = 'http://localhost:8888/login'}>Please log in with Spotify!</button>
+      </div>
+    )
   }
-]
-let fakeUserData = {
-  profilePicture: 'https://breathingspacedc.com/wp-content/uploads/Bubbles-Lumppini-Fotolia-1080x675.jpg',
-  userName: 'Joe Blogs',
-  currentTrack: fakeSongs[2],
-  currentProgress: '50',
-  topArtists: [],
-  topPlaylists: [],
-  topTracks: [fakeSongs]
 }
 
 class LoadingPlaceHolder extends Component {
@@ -71,7 +51,6 @@ class LoadingPlaceHolder extends Component {
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      fakeUserData.currentTrack ?
       <div style={{...defaultFrameStyle}}>
         <h2 style={{
           textAlign: 'center',
@@ -100,7 +79,7 @@ class CurrentlyPlaying extends Component {
               />
               <figcaption style={{
                 fontWeight: 'bold'
-              }}>{fakeUserData.currentTrack.album}</figcaption>
+              }}>Album name</figcaption>
             </figure>
           </div>
           
@@ -112,12 +91,12 @@ class CurrentlyPlaying extends Component {
             alignItems: 'center',
             justifyContent: 'space-around'
           }}>
-            <p style={{fontWeight: 'bold'}}>{fakeUserData.currentTrack.name}</p>
-            <p>{fakeUserData.currentTrack.artists}</p>
+            <p style={{fontWeight: 'bold'}}>Current track name</p>
+            <p>Current track artists</p>
           </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p> 
+          <p>0 / 0</p> 
             <div style={{
               backgroundColor: accentColor,
               color: 'black',
@@ -130,10 +109,6 @@ class CurrentlyPlaying extends Component {
             </div>
         </div>
       </div>
-      
-      :
-
-      <LoadingPlaceHolder/>
     )
   }
 }
@@ -183,59 +158,82 @@ class FavouriteTracks extends Component {
   }
 }
 
-function App() {
-  return (
-    fakeUserData.userName ?
-      <div>
-        <div style={{...defaultSectionStyle,
-          
-        }}>
-          <figure style={{
-          }}>
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      serverData: {}
+    }
+  }
+
+  componentDidMount() {
+    let accessToken = queryString.parse(window.location.search).access_token;
+    console.log(accessToken);
+
+    fetch('https://api.spotify.com/v1/me', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then((response) => response.json())
+    .then((data) => {
+      this.setState({serverData: {user: {name: data.display_name, profileLink: data.external_urls.spotify}}});
+      console.log(data);
+      console.log(this.state.serverData);
+    })
+  }
+
+  render() {
+    return (
+      this.state.serverData.user ?
+        <div>
+          <div style={{...defaultSectionStyle,
             
-          </figure>
-          <div>
+          }}>
             <figure style={{
+            }}>
+              
+            </figure>
+            <div>
+              <figure style={{
+                display: 'flex',
+                flexDirection: 'row',
+                borderBottom: 'solid 2px',
+                borderColor: accentColor,
+                paddingBottom: '5px',
+                marginBottom: '10px'
+              }}>
+                <img style= {{
+                borderRadius: '.2em',
+                width: '2em',
+                margin: '0 .5em'
+              }}
+                src=''/>
+                <figcaption className="outside"><a href={this.state.serverData.user.profileLink}>{this.state.serverData.user.name}</a></figcaption>
+              </figure>
+              <CurrentlyPlaying/>
+            </div>
+          </div>
+  
+  
+          <div style={{...defaultSectionStyle,
+            textAlign: 'center'
+          }}>
+            <h1>Your Favourites</h1>
+            <div style={{
               display: 'flex',
               flexDirection: 'row',
-              borderBottom: 'solid 2px',
-              borderColor: accentColor,
-              paddingBottom: '5px',
-              marginBottom: '10px'
+              flexWrap: 'wrap',
+              justifyContent: 'space-between'
             }}>
-              <img style= {{
-              borderRadius: '.2em',
-              width: '2em',
-              margin: '0 .5em'
-            }}
-              src={fakeUserData.profilePicture}/>
-              <figcaption className="outside">{fakeUserData.userName}</figcaption>
-            </figure>
-            <CurrentlyPlaying/>
+              <FavouriteArtists/>
+              <FavouritePlaylists/>
+              <FavouriteTracks/>
+            </div>
           </div>
         </div>
-
-
-        <div style={{...defaultSectionStyle,
-          textAlign: 'center'
-        }}>
-          <h1>Your Favourites</h1>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between'
-          }}>
-            <FavouriteArtists/>
-            <FavouritePlaylists/>
-            <FavouriteTracks/>
-          </div>
-        </div>
-      </div>
-      : 
-      
-      <LoadingPlaceHolder/>
-  );
+        : 
+        
+        <LoginPage/>
+    )
+  }
 }
 
 export default App;
