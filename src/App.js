@@ -1,66 +1,46 @@
 import React, { Component } from 'react';
 import './App.css';
+import queryString from 'query-string';
 
 let borderCurve = '2vw';
-let accentColor = '#AAAAAA';
-let frameBackgroundColor = '#C4C4C4';
+let accentColor = '#3489aa';
+let frameBackgroundColor = '#ff7034 ';
 let defaultSectionStyle = {
   margin: '2vw',
   padding: '0 2vw 2vw 2vw',
-  'border-bottom-style': 'solid',
-  'border-color': accentColor
+  borderBottom: 'solid',
+  borderColor: accentColor
 }
 let defaultFrameStyle = {
-  'background-color': frameBackgroundColor,
-  'border-radius': borderCurve,
-  padding: '2vw'
+  backgroundColor: frameBackgroundColor,
+  borderRadius: borderCurve,
+  padding: '1vw'
 }
 let defaultDataSectionStyle = {
   ...defaultFrameStyle,
   flex: '0 0 28%'
 }
 let favouriteListItemStyle = {
-  'list-style': 'none',
-  'line-height': '100px'
+  listStyle: 'none',
+  lineHeight: '100px'
 }
 
-let fakeSongs =  [
-  {
-    name: 'I Spy',
-    totalSeconds: '272',
-    currentSeconds: '0',
-    artists: 'Krept & Konan, Headie One, K-Trap',
-    album: 'Revenge is Sweet'
-  },
-  {
-    name: 'Can You Hear Me?',
-    totalSeconds: '233',
-    artists: 'Wiley, Jme, Ms D, Skepta',
-    album: 'The Ascent'
-  },
-  {
-    name: 'Funky Friday',
-    totalSeconds: '183',
-    artists: 'Dave, Fredo',
-    album: 'Funky Friday'
+class LoginPage extends Component {
+  render() {
+    return (
+      <div>
+        <button onClick={() => window.location = 'http://localhost:8888/login'}>Please log in with Spotify!</button>
+      </div>
+    )
   }
-]
-let fakeUserData = {
-  profilePicture: 'https://breathingspacedc.com/wp-content/uploads/Bubbles-Lumppini-Fotolia-1080x675.jpg',
-  userName: 'Joe Blogs',
-  currentTrack: fakeSongs[0],
-  currentProgress: '50',
-  topArtists: [],
-  topPlaylists: [],
-  topTracks: [fakeSongs]
 }
 
 class LoadingPlaceHolder extends Component {
   render() {
     return (
       <div style={{
-        'text-align': 'center',
-        'align-items': 'center'
+        textAlign: 'center',
+        alignItems: 'center'
       }}>
         Loading...
       </div>
@@ -71,10 +51,9 @@ class LoadingPlaceHolder extends Component {
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      fakeUserData.currentTrack ?
       <div style={{...defaultFrameStyle}}>
         <h2 style={{
-          'text-align': 'center',
+          textAlign: 'center',
           width: 'fit-content',
           margin: 'auto',
           display: 'block'
@@ -84,58 +63,52 @@ class CurrentlyPlaying extends Component {
 
         <div style={{
           display: 'flex',
-          'flex-direction': 'row',
-          'justify-content': 'space-around'
+          flexDirection: 'row',
+          justifyContent: 'center'
         }}>
           <div style={{
-              'text-align': 'center',
-              width: '20%',
-              margin: '2vw'
-            }}>
+              textAlign: 'center',
+              width: '20%'
+          }}>
             <figure>
               <img style={{
                 width: '70%',
-                'border-radius': borderCurve
+                borderRadius: borderCurve
               }} 
               src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'
               />
               <figcaption style={{
-                'font-weight': 'bold'
-              }}>{fakeUserData.currentTrack.album}</figcaption>
+                fontWeight: 'bold'
+              }}>Album name</figcaption>
             </figure>
           </div>
           
           <div style={{
-            'text-align': 'center',
-            width: '70%',
+            textAlign: 'center',
+            width: '50%',
             display: 'flex',
-            'flex-direction': 'row',
-            'align-items': 'center',
-            'justify-content': 'space-around'
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-around'
           }}>
-            <p style={{'font-size': '2vw', 'font-weight': 'bold'}}>{fakeUserData.currentTrack.name}</p>
-            <p style={{'font-size': '2vw'}}>{fakeUserData.currentTrack.artists}</p>
+            <p style={{fontWeight: 'bold'}}>Current track name</p>
+            <p>Current track artists</p>
           </div>
         </div>
-        <div style={{'text-align': 'center'}}>
-          <p>{fakeUserData.currentProgress} / {fakeUserData.currentTrack.totalSeconds}</p> 
+        <div style={{textAlign: 'center'}}>
+          <p>0 / 0</p> 
             <div style={{
               backgroundColor: accentColor,
-              color: 'white',
-              'border-radius': '2vw',
+              color: 'black',
+              borderRadius: '2vw',
               width: '80%',
-              margin: ' 1.5vw auto auto auto',
-              padding: '5px',
+              height: '.4em',
+              margin: '.5em auto auto auto',
+              padding: '.2em',
             }}>
-
-              \\\\\\ Progress Bar //////
             </div>
         </div>
       </div>
-      
-      :
-
-      <LoadingPlaceHolder/>
     )
   }
 }
@@ -185,55 +158,82 @@ class FavouriteTracks extends Component {
   }
 }
 
-function App() {
-  return (
-    fakeUserData.userName ?
-      <div>
-        <div style={{...defaultSectionStyle}}>
-          <figure style={{
-            display: 'none'
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      serverData: {}
+    }
+  }
+
+  componentDidMount() {
+    let accessToken = queryString.parse(window.location.search).access_token;
+    console.log(accessToken);
+
+    fetch('https://api.spotify.com/v1/me', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    }).then((response) => response.json())
+    .then((data) => {
+      this.setState({serverData: {user: {name: data.display_name, profileLink: data.external_urls.spotify}}});
+      console.log(data);
+      console.log(this.state.serverData);
+    })
+  }
+
+  render() {
+    return (
+      this.state.serverData.user ?
+        <div>
+          <div style={{...defaultSectionStyle,
+            
           }}>
-            <img style= {{
-              'border-radius': borderCurve,
-              width: '100%'
-            }}
-            src={fakeUserData.profilePicture}/>
-          </figure>
-          
-          <div>
-            <h2 style={{
-              'border-bottom': 'solid 2px',
-              'border-color': accentColor,
-              'padding-bottom': '5px',
-              'margin-bottom': '10px'
+            <figure style={{
             }}>
-              {fakeUserData.userName}
-            </h2>
-            <CurrentlyPlaying/>
+              
+            </figure>
+            <div>
+              <figure style={{
+                display: 'flex',
+                flexDirection: 'row',
+                borderBottom: 'solid 2px',
+                borderColor: accentColor,
+                paddingBottom: '5px',
+                marginBottom: '10px'
+              }}>
+                <img style= {{
+                borderRadius: '.2em',
+                width: '2em',
+                margin: '0 .5em'
+              }}
+                src=''/>
+                <figcaption className="outside"><a href={this.state.serverData.user.profileLink}>{this.state.serverData.user.name}</a></figcaption>
+              </figure>
+              <CurrentlyPlaying/>
+            </div>
           </div>
-        </div>
-
-
-        <div style={{...defaultSectionStyle,
-          'text-align': 'center'
-        }}>
-          <h1>Your Favourites</h1>
-          <div style={{
-            display: 'flex',
-            'flex-direction': 'row',
-            'flex-wrap': 'wrap',
-            'justify-content': 'space-between'
+  
+  
+          <div style={{...defaultSectionStyle,
+            textAlign: 'center'
           }}>
-            <FavouriteArtists/>
-            <FavouritePlaylists/>
-            <FavouriteTracks/>
+            <h1>Your Favourites</h1>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between'
+            }}>
+              <FavouriteArtists/>
+              <FavouritePlaylists/>
+              <FavouriteTracks/>
+            </div>
           </div>
         </div>
-      </div>
-      : 
-      
-      <LoadingPlaceHolder/>
-  );
+        : 
+        
+        <LoginPage/>
+    )
+  }
 }
 
 export default App;
