@@ -28,8 +28,44 @@ let favouriteListItemStyle = {
 class LoginPage extends Component {
   render() {
     return (
-      <div>
-        <button onClick={() => window.location = 'http://localhost:8888/login'}>Please log in with Spotify!</button>
+      <div style={{
+        height: '100vh',
+        width: '100%',
+        backgroundColor: 'grey',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white'
+      }}>
+        <div style={{
+          border: 'solid white',
+          borderRadius: '50%',
+          width: '50vh',
+          height: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <h2 style={{textAlign:'center', fontSize:'150%'}}><span style={{display:'block', fontSize:'inherit'}}>First,</span> please log in to Spotify</h2>
+
+          <button onClick={() => {window.location='http://localhost:8888/login'}}
+          style={{
+            color: 'inherit',
+            textDecoration: 'none',
+            textAlign: 'center',
+            lineHeight: '150%',
+            backgroundColor: 'green',
+            border: 'solid green',
+            borderRadius: '10px',
+            padding: '.5vw',
+            cursor: 'pointer',
+            marginTop: '10%',
+            fontWeight: 'bold'
+          }}>
+            Log in to Spotify
+          </button>
+        </div>
       </div>
     )
   }
@@ -182,6 +218,7 @@ class App extends Component {
   render() {
     return (
       console.log(queryString.parse(window.location.search).access_token),
+      
       queryString.parse(window.location.search).access_token === undefined ?
       <LoginPage/>
       :
