@@ -24,8 +24,9 @@ let StyleFrame = {
   padding: innerSpacing
 }
 let StyleItemList = {
-  listStyle: 'none',
-  lineHeight: '4em'
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'space-between'
 }
 
 class LoginScreen extends Component {
@@ -98,7 +99,7 @@ class AlbumFrame extends Component {
       }}>
         <img style={{
           width: '100%',
-          borderRadius: borderCurve
+          borderRadius: '.5vw'
         }} 
         src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'
         />
@@ -110,16 +111,46 @@ class AlbumFrame extends Component {
   }
 }
 
-class CurrentlyPlaying extends Component {
+class MediaControls extends Component {
   render() {
     return (
       <div style={{
-        width: '50%',
-        height: '100%'
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        margin: '2vw'
       }}>
+        <p>o</p>
+        <p>&lt;&lt;</p>
+        <p>&gt;</p>
+        <p>&gt;&gt;</p>
+        <p>x</p>
+      </div>
+    )
+  }
+}
+
+class ProgressBar extends Component {
+  render() {
+    return (
+      <div style={{
+        backgroundColor: accentColor,
+        borderRadius: '2vw',
+        height: '.4em',
+        margin: '.2em auto auto auto',
+        padding: '.2em',
+      }}>
+      </div>
+    )
+  }
+}
+
+class CurrentlyPlaying extends Component {
+  render() {
+    return (
+      <div>
         <h2 style={{
-          width: 'fit-content',
-          margin: 'auto'
+          margin: '0 auto 2vw auto',
+          textAlign: 'center'
         }}>
           Currently Playing
         </h2>
@@ -127,32 +158,26 @@ class CurrentlyPlaying extends Component {
         <div style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: '80%'
+          justifyContent: 'space-between'
         }}>
           <AlbumFrame/>
-          <div style={{
-            textAlign: 'center',
-            width: '50%',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-around'
-          }}>
-            <p style={{fontWeight: 'bold'}}>Current track name</p>
-            <p>Current track artists</p>
-          </div>
+          <div>
+            <div style={{
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around'
+            }}>
+              <p style={{fontWeight: 'bold'}}>Current track name</p>
+              <p>Current track artists</p>
+            </div>
+            <MediaControls/>
+            </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>0 / 0</p> 
-            <div style={{
-              backgroundColor: accentColor,
-              borderRadius: '2vw',
-              height: '.4em',
-              margin: '.2em auto auto auto',
-              padding: '.2em',
-            }}>
-            </div>
+          <p>0 / 0</p>
+          <ProgressBar/>
         </div>
       </div>
     )
@@ -162,13 +187,18 @@ class CurrentlyPlaying extends Component {
 class RecentlyPlayed extends Component {
   render() {
     return (
-      <div style={{...StyleItemList,
-        width: '50%'
-      }}>
+      <div>
         <h2>Recently Played</h2>
-        <FavouriteItem/>
-        <FavouriteItem/>
-        <FavouriteItem/>
+        <div style={{...StyleItemList, overflow:'auto'}}>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+          <FavouriteItem/>
+        </div>
       </div>
     )
   }
@@ -187,21 +217,37 @@ class FavouriteItem extends Component {
       }}>
         <div style={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
           <div style={{
             backgroundColor: accentColor,
-            border: 'solid '.concat(accentColor),
+            border: ['solid', accentColor].join(' '),
             borderRadius: '50%',
             width: '3vw',
             height: '3vw',
-            marginRight: '20px'
+            marginRight: '1em'
           }}></div>
           <h3>Item</h3>
         </div>
-        <p>i</p>
-        <p>&gt;</p>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <p style={{marginRight:'1em'}}>i</p>
+          <p>&gt;</p>
+        </div>
+      </div>
+    )
+  }
+}
+
+class FavouritesOptionsModule extends Component {
+  render() {
+    return (
+      <div>
+        <i>Options Bar</i>
       </div>
     )
   }
@@ -210,17 +256,19 @@ class FavouriteItem extends Component {
 class FavouriteSection extends Component {
   render() {
     return (
-      <div style={{flex: '0 1 46%'}}>
+      <div style={{flex: '0 1 48.5%'}}>
         <h2>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
-          <div>Options Bar</div>
-          <ul style={{...StyleItemList}}>
-            <li><FavouriteItem/></li>
-            <li><FavouriteItem/></li>
-            <li><FavouriteItem/></li>
-            <li><FavouriteItem/></li>
-            <li><FavouriteItem/></li>
-          </ul>
+          <FavouritesOptionsModule/>
+          <div style={{...StyleItemList}}>
+            <FavouriteItem/>
+            <FavouriteItem/>
+            <FavouriteItem/>
+            <FavouriteItem/>
+            <FavouriteItem/>
+            <FavouriteItem/>
+            <FavouriteItem/>
+          </div>
         </div>
       </div>
     )
@@ -289,12 +337,26 @@ class App extends Component {
             </a>
             </figcaption>
         </figure>
-        <div style={{...StyleSection,
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}>
-          <CurrentlyPlaying/>
-          <RecentlyPlayed/>
+        
+        <div style={{...StyleSection}}>
+          <div style={{...StyleFrame,
+            display: 'grid',
+            gridTemplateColumns: '50% 50%',
+            gridTemplateRows: 'auto',
+            gridTemplateAreas: 'CurrentlyPlaying RecentlyPlayed'
+          }}>
+            <div style={{
+              paddingRight: innerSpacing,
+              borderRight: sectionSeparator
+            }}>
+              <CurrentlyPlaying/>
+            </div>
+            <div style={{
+              paddingLeft: innerSpacing
+            }}>
+              <RecentlyPlayed/>
+            </div>
+          </div>
         </div>
   
         <div style={{...StyleSection,
