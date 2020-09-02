@@ -23,10 +23,12 @@ let StyleFrame = {
   borderRadius: borderCurve,
   padding: innerSpacing
 }
-let StyleItemList = {
+let StyleList = {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'space-between'
+  alignItems: 'space-between',
+  marginTop: '10px',
+  paddingBottom: '10px'
 }
 
 class LoginScreen extends Component {
@@ -116,8 +118,7 @@ class MediaControls extends Component {
     return (
       <div style={{
         display: 'flex',
-        justifyContent: 'space-evenly',
-        margin: '2vw'
+        justifyContent: 'space-evenly'
       }}>
         <p>o</p>
         <p>&lt;&lt;</p>
@@ -147,7 +148,10 @@ class ProgressBar extends Component {
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      <div>
+      <div style={{
+        width: '100%',
+        height: '100%'
+      }}>
         <h2 style={{
           margin: '0 auto 2vw auto',
           textAlign: 'center'
@@ -161,16 +165,17 @@ class CurrentlyPlaying extends Component {
           justifyContent: 'space-between'
         }}>
           <AlbumFrame/>
-          <div>
+          <div style={{width:'70%'}}>
             <div style={{
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-around'
+              justifyContent: 'space-between',
+              marginBottom: '3vw'
             }}>
-              <p style={{fontWeight: 'bold'}}>Current track name</p>
-              <p>Current track artists</p>
+              <p style={{marginRight:'4vw'}}>Song Name</p>
+              <p>Artist Name</p>
             </div>
             <MediaControls/>
             </div>
@@ -187,10 +192,15 @@ class CurrentlyPlaying extends Component {
 class RecentlyPlayed extends Component {
   render() {
     return (
-      <div>
+      <div style={{
+        height:'100%',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start'
+      }}>
         <h2>Recently Played</h2>
-        <div style={{...StyleItemList, overflow:'auto'}}>
-          <FavouriteItem/>
+        <div style={{...StyleList, overflow: 'auto'}}>
           <FavouriteItem/>
           <FavouriteItem/>
           <FavouriteItem/>
@@ -213,6 +223,8 @@ class FavouriteItem extends Component {
         flexWrap: 'nowrap',
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginTop: '10px',
+        paddingBottom: '10px',
         borderBottom: itemSeparator
       }}>
         <div style={{
@@ -243,7 +255,7 @@ class FavouriteItem extends Component {
   }
 }
 
-class FavouritesOptionsModule extends Component {
+class FavouritesOptions extends Component {
   render() {
     return (
       <div>
@@ -259,8 +271,8 @@ class FavouriteSection extends Component {
       <div style={{flex: '0 1 48.5%'}}>
         <h2>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
-          <FavouritesOptionsModule/>
-          <div style={{...StyleItemList}}>
+          <FavouritesOptions/>
+          <div style={{...StyleList}}>
             <FavouriteItem/>
             <FavouriteItem/>
             <FavouriteItem/>
@@ -332,6 +344,7 @@ class App extends Component {
               textDecoration: 'none',
               fontWeight: 'bold'
             }}
+            target='blank'
             href={this.state.serverData.user ? this.state.serverData.user.profileLink : ''}>
               {this.state.serverData.user ? this.state.serverData.user.name : '---'}
             </a>
@@ -342,7 +355,7 @@ class App extends Component {
           <div style={{...StyleFrame,
             display: 'grid',
             gridTemplateColumns: '50% 50%',
-            gridTemplateRows: 'auto',
+            gridTemplateRows: '20vw',
             gridTemplateAreas: 'CurrentlyPlaying RecentlyPlayed'
           }}>
             <div style={{
