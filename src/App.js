@@ -31,6 +31,19 @@ let StyleList = {
   paddingBottom: '10px'
 }
 
+class LoadingPlaceHolder extends Component {
+  render() {
+    return (
+      <div style={{
+        textAlign: 'center',
+        alignItems: 'center'
+      }}>
+        Loading...
+      </div>
+    )
+  }
+}
+
 class LoginScreen extends Component {
   render() {
     return (
@@ -79,19 +92,6 @@ class LoginScreen extends Component {
   }
 }
 
-class LoadingPlaceHolder extends Component {
-  render() {
-    return (
-      <div style={{
-        textAlign: 'center',
-        alignItems: 'center'
-      }}>
-        Loading...
-      </div>
-    )
-  }
-}
-
 class AlbumFrame extends Component {
   render() {
     return (
@@ -120,11 +120,11 @@ class MediaControls extends Component {
         display: 'flex',
         justifyContent: 'space-evenly'
       }}>
-        <p>o</p>
-        <p>&lt;&lt;</p>
-        <p>&gt;</p>
-        <p>&gt;&gt;</p>
-        <p>x</p>
+        <button>o</button>
+        <button>&lt;&lt;</button>
+        <button>&gt;</button>
+        <button>&gt;&gt;</button>
+        <button>x</button>
       </div>
     )
   }
@@ -189,6 +189,72 @@ class CurrentlyPlaying extends Component {
   }
 }
 
+class DataItem extends Component {
+  constructor() {
+    super();
+    this.state = {
+      toggled: false
+    }
+  }
+  render() {
+    return (
+      <div style={{
+        marginTop: '1.5vw',
+        paddingBottom: '1.5vw',
+        borderBottom: itemSeparator
+      }}>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'nowrap',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div style={{
+              backgroundColor: accentColor,
+              border: ['solid', accentColor].join(' '),
+              borderRadius: '50%',
+              width: '3vw',
+              height: '3vw',
+              marginRight: '1em'
+            }}></div>
+            <h3>Item</h3>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <p style={{marginRight:'1em'}}>i</p>
+            <button onClick={() => {
+              if(!this.state.toggled) {
+                this.setState({toggled: true})
+              }
+              else {
+                this.setState({toggled: false})
+              }
+            }}
+            >&gt;</button>
+          </div>
+        </div>
+        {
+          this.state.toggled ? 
+            <div className="toggle"style={{display:'block'}}>
+              Hidden Section
+            </div>
+          :
+          null
+        }
+      </div>
+    )
+  }
+}
+
 class RecentlyPlayed extends Component {
   render() {
     return (
@@ -201,54 +267,13 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-        </div>
-      </div>
-    )
-  }
-}
-
-class FavouriteItem extends Component {
-  render() {
-    return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: '10px',
-        paddingBottom: '10px',
-        borderBottom: itemSeparator
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <div style={{
-            backgroundColor: accentColor,
-            border: ['solid', accentColor].join(' '),
-            borderRadius: '50%',
-            width: '3vw',
-            height: '3vw',
-            marginRight: '1em'
-          }}></div>
-          <h3>Item</h3>
-        </div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <p style={{marginRight:'1em'}}>i</p>
-          <p>&gt;</p>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
         </div>
       </div>
     )
@@ -273,13 +298,13 @@ class FavouriteSection extends Component {
         <div style={{...StyleFrame}}>
           <FavouritesOptions/>
           <div style={{...StyleList}}>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
           </div>
         </div>
       </div>
