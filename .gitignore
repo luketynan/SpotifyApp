@@ -11,6 +11,9 @@
 # production
 /build
 
+# files I want to keep local, but in this dir
+files_to_ignore/
+
 # misc
 .DS_Store
 .env.local
