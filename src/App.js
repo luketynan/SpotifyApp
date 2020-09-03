@@ -12,8 +12,6 @@ let sectionSeparator = ['solid', sectionSeparatorWidth, accentColor].join(' ');
 let outerSpacing = '3vw';
 let innerSpacing = '2vw';
 
-let topSectionHeight = null;
-
 let StyleSection = {
   margin: '0',
   padding: outerSpacing.concat(' 0'),
@@ -231,7 +229,8 @@ class DataItem extends Component {
             alignItems: 'center'
           }}>
             <p style={{marginRight:'1em'}}>i</p>
-            <button onClick={() => {
+            <img src='roundedCornerTriangle.svg'
+            onClick={() => {
               if (!this.state.toggled) {
                 this.setState({toggled: true})
                 this.setState({rotation: '90deg'})
@@ -243,9 +242,13 @@ class DataItem extends Component {
             }}
             style={{
               transition: 'all .1s ease-in-out',
-              transform: 'rotate(' + this.state.rotation + ')'
+              transform: 'rotate(' + this.state.rotation + ')',
+              backgroundColor: frameBackgroundColor,
+              border: 'none',
+              width: '2vw',
+              height: '2vw'
             }}
-            >&gt;</button>
+            />
           </div>
         </div>
         <div className="toggle"
