@@ -12,6 +12,8 @@ let sectionSeparator = ['solid', sectionSeparatorWidth, accentColor].join(' ');
 let outerSpacing = '3vw';
 let innerSpacing = '2vw';
 
+let topSectionHeight = null;
+
 let StyleSection = {
   margin: '0',
   padding: outerSpacing.concat(' 0'),
@@ -27,8 +29,8 @@ let StyleList = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'space-between',
-  marginTop: '10px',
-  paddingBottom: '10px'
+  marginTop: '.5vw',
+  paddingBottom: '.5vw'
 }
 
 class LoadingPlaceHolder extends Component {
@@ -81,8 +83,7 @@ class LoginScreen extends Component {
             padding: '1vw',
             cursor: 'pointer',
             marginTop: '5%',
-            fontWeight: 'bold',
-            boxShadow: '1px 1px black'
+            fontWeight: 'bold'
           }}>
             Log in to Spotify
           </button>
@@ -149,11 +150,10 @@ class CurrentlyPlaying extends Component {
   render() {
     return (
       <div style={{
-        width: '100%',
-        height: '100%'
+        width: '100%'
       }}>
         <h2 style={{
-          margin: '0 auto 2vw auto',
+          margin: '0 auto 3% auto',
           textAlign: 'center'
         }}>
           Currently Playing
@@ -232,24 +232,30 @@ class DataItem extends Component {
           }}>
             <p style={{marginRight:'1em'}}>i</p>
             <button onClick={() => {
-              if(!this.state.toggled) {
+              if (!this.state.toggled) {
                 this.setState({toggled: true})
+                this.setState({rotation: '90deg'})
               }
               else {
                 this.setState({toggled: false})
+                this.setState({rotation: '0deg'})
               }
+            }}
+            style={{
+              transition: 'all .1s ease-in-out',
+              transform: 'rotate(' + this.state.rotation + ')'
             }}
             >&gt;</button>
           </div>
         </div>
-        {
-          this.state.toggled ? 
-            <div className="toggle"style={{display:'block'}}>
-              Hidden Section
-            </div>
-          :
-          null
-        }
+        <div className="toggle"
+        style={{
+          display: this.state.toggled ? 'initial' : 'none',
+          height: this.state.toggled ? 'fit-content' : '0',
+          transition: 'all 1s ease-in-out'
+        }}>
+          Hidden Section
+        </div>
       </div>
     )
   }
@@ -259,7 +265,7 @@ class RecentlyPlayed extends Component {
   render() {
     return (
       <div style={{
-        height:'100%',
+        height: '100%',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -332,7 +338,8 @@ class App extends Component {
           serverData: {
             user: {
               name: data.display_name,
-              profileLink: data.external_urls.spotify
+              profileLink: data.external_urls.spotify,
+              images: data.images
             }
           }
         });
@@ -362,7 +369,12 @@ class App extends Component {
           width: '2em',
           marginRight: '1em'
           }}
-            src='favicon.ico'/>
+            src={this.state.serverData.user ?
+              'favicon.ico'
+              :
+              'favicon.ico'
+            }
+          />
           <figcaption>
             <a style={{
               color: 'inherit',
@@ -370,8 +382,8 @@ class App extends Component {
               fontWeight: 'bold'
             }}
             target='blank'
-            href={this.state.serverData.user ? this.state.serverData.user.profileLink : ''}>
-              {this.state.serverData.user ? this.state.serverData.user.name : '---'}
+            href={this.state.serverData.user ? this.state.serverData.user.profileLink : '#'}>
+              {this.state.serverData.user ? this.state.serverData.user.name : 'User name not found'}
             </a>
             </figcaption>
         </figure>
@@ -385,12 +397,16 @@ class App extends Component {
           }}>
             <div style={{
               paddingRight: innerSpacing,
-              borderRight: sectionSeparator
+              borderRight: sectionSeparator,
+              height: 'fit-content'
             }}>
               <CurrentlyPlaying/>
             </div>
             <div style={{
-              paddingLeft: innerSpacing
+              position: 'relative',
+              width: '100%',
+              paddingLeft: innerSpacing,
+              textAlign: 'center'
             }}>
               <RecentlyPlayed/>
             </div>
