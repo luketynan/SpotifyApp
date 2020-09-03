@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../App.js';
+import './topUserPrefs.styles.css';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -9,26 +10,32 @@ import Button from "@material-ui/core/Button";
 
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
-import { ReactComponent } from '*.svg';
 
 
-// class user_Preference {
+class User_Preference_Nav extends Component{
 
-//     render(){
+  render(){
+
+    return(
+
+      <div id="user-pref-main">
+        <div class="inner-main">
+          <User_Preference_Slider />
+          <User_Preference_Timeform />
+
+        </div>
+        <User_Preference_Button />
+
+      </div>
+
+    )
+  }
+}
+
+export default User_Preference_Nav
 
 
-//         return(
-
-//             <div id="main">
-
-//             </div>
-//         )
-//     }
-// }
-
-
-
-class user_Preference_Slider extends ReactComponent{
+class User_Preference_Slider extends Component{
 
 
 
@@ -39,19 +46,19 @@ class user_Preference_Slider extends ReactComponent{
           }
     
     return(
-        <div className="slider">
-        <Typography id="discrete-slider" gutterBottom>
-          Limit
-        </Typography>
-        <Slider
-          defaultValue={30}
-          getAriaValueText={valuetext}
-          aria-labelledby="discrete-slider"
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={50}
+      <div className="slider">
+          <Typography id="discrete-slider" gutterBottom>
+            Limit
+          </Typography>
+          <Slider
+            defaultValue={30}
+            getAriaValueText={valuetext}
+            aria-labelledby="discrete-slider"
+            valueLabelDisplay="auto"
+            step={1}
+            marks
+            min={1}
+            max={50}
         />
       </div>
 
@@ -59,12 +66,13 @@ class user_Preference_Slider extends ReactComponent{
     }
 }
 
-class user_Preference_Button extends ReactComponent {
+
+class User_Preference_Button extends Component {
 
     render() {
 
     return(
-        <div className="send_Container">
+      <div className="send_Container">
         <Button className="go_Button" variant="outlined">
           Go!
         </Button>
@@ -74,7 +82,8 @@ class user_Preference_Button extends ReactComponent {
     }
 }
 
-class user_Preference_Timeform extends ReactComponent {
+
+class User_Preference_Timeform extends Component {
 
     render() {
 
@@ -82,9 +91,8 @@ class user_Preference_Timeform extends ReactComponent {
 
         return(
 
-            <div className="timeForm">
+      <div className="timeForm">
         <FormControl component="fieldset">
-          {/* <FormLabel component="legend">labelPlacement</FormLabel> */}
           <RadioGroup
             row
             aria-label="position"
@@ -117,6 +125,7 @@ class user_Preference_Timeform extends ReactComponent {
         )
     }
 
-
 }
+
+
 

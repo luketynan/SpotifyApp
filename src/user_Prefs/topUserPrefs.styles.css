@@ -1,0 +1,41 @@
+/* .App {
+    font-family: sans-serif;
+    text-align: center;
+  } */
+  .user-pref-main {
+    /* position: absolute; */
+    left: 0;
+    /* padding: 10px; */
+    /* display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; */
+    width: 100%;
+
+
+  }
+
+  .inner-main {
+    display: grid;
+    grid-template-areas: 
+        "slider timeZone";
+  }
+  
+  .slider {
+    grid-area: slider;
+
+    margin: 0%;
+
+  }
+  .timeForm {
+    grid-area: timeZone;
+ 
+    /* margin: 0%; */
+  }
+  
+  .send_Container {
+    /* text-align: center;
+    padding-top: 3%;
+    padding-right: 3%; */
+    margin:auto;
+  }
+  
