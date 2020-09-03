@@ -30,6 +30,24 @@ let StyleList = {
   marginTop: '.5vw',
   paddingBottom: '.5vw'
 }
+let StyleButton = {
+  backgroundColor: frameBackgroundColor,
+  border: 'none',
+  width: '2vw',
+  height: '2vw',
+  fill: accentColor,
+  stroke: accentColor,
+  cursor: 'pointer'
+}
+let StyleMediaButton = {...StyleButton,
+  width: '3vw',
+  height: '3vw'
+}
+let StyleDropDownButton = {...StyleButton,
+  width: '1.5vw',
+  height: '1.5vw'
+}
+
 
 class LoadingPlaceHolder extends Component {
   render() {
@@ -113,17 +131,81 @@ class AlbumFrame extends Component {
 }
 
 class MediaControls extends Component {
+  constructor() {
+    super();
+    this.state = {
+      playing: false,
+      repeat: false,
+      shuffle: false
+    }
+  }
   render() {
     return (
       <div style={{
         display: 'flex',
         justifyContent: 'space-evenly'
       }}>
-        <button>o</button>
-        <button>&lt;&lt;</button>
-        <button>&gt;</button>
-        <button>&gt;&gt;</button>
-        <button>x</button>
+        <svg 
+        onClick={() => {
+          this.setState({repeat: !this.state.repeat})
+          console.log('Repeat');
+        }}
+        style={{...StyleMediaButton}}
+        version="1.1" viewBox="0 0 342.24 247.83" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-35.585 -19.636)">
+          <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none" strokeWidth="35"/>
+          <path d="m359.92 72.496-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+          <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none" strokeWidth="35"/>
+          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+        </g>
+        </svg>
+        <svg 
+        onClick={() => {
+          console.log('Back');
+        }}
+        style={{...StyleMediaButton, transform:'rotate(180deg)'}} 
+        version="1.1" viewBox="0 0 383.61 285.7" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(-5 -5)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005">
+            <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
+            <path transform="matrix(.56563 0 0 .73579 203.52 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
+          </g>
+        </svg>
+        <svg 
+        onClick={() => {
+          this.setState({playing: !this.state.playing})
+          console.log('Playing: ' + this.state.playing);
+        }}
+        style={{...StyleMediaButton}}
+        version="1.1" viewBox="0 0 197.26 285.7" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-5 -5)">
+          <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" fill="#818181" stroke="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
+        </g>
+        </svg>
+        <svg 
+        onClick={() => {
+          console.log('Skip');
+        }}
+        style={{...StyleMediaButton}} 
+        version="1.1" viewBox="0 0 383.61 285.7" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(-5 -5)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005">
+            <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
+            <path transform="matrix(.56563 0 0 .73579 203.52 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
+          </g>
+        </svg>
+        <svg 
+        onClick={() => {
+          this.setState({shuffle: !this.state.shuffle})
+          console.log('Shuffle');
+        }}
+        style={{...StyleMediaButton}} 
+        version="1.1" viewBox="0 0 418.72 289.09" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-.72501 -2.8133)">
+          <path d="m330.89 236.77c-214.43-0.80945-148.03-184.26-329.33-175.53" fill="none" strokeWidth="35"/>
+          <path transform="matrix(1.8522 0 0 -2.1858 .81152 -.033965)" d="m217.32-108.15-30.966 17.878v-35.757z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
+          <path d="m330.89 60.491c-214.43 0.80945-148.03 184.26-329.33 175.53" fill="none" strokeWidth="35"/>
+          <path transform="matrix(1.8522 0 0 2.1858 .81152 -.033965)" d="m217.32 27.878-30.966 17.878v-35.757z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
+        </g>
+        </svg>
       </div>
     )
   }
@@ -191,7 +273,7 @@ class DataItem extends Component {
   constructor() {
     super();
     this.state = {
-      toggled: false
+      shown: false
     }
   }
   render() {
@@ -231,30 +313,19 @@ class DataItem extends Component {
             <p style={{marginRight:'1em'}}>i</p>
             <img src='roundedCornerTriangle.svg'
             onClick={() => {
-              if (!this.state.toggled) {
-                this.setState({toggled: true})
-                this.setState({rotation: '90deg'})
-              }
-              else {
-                this.setState({toggled: false})
-                this.setState({rotation: '0deg'})
-              }
+              this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
             }}
-            style={{
+            style={{...StyleDropDownButton,
               transition: 'all .1s ease-in-out',
-              transform: 'rotate(' + this.state.rotation + ')',
-              backgroundColor: frameBackgroundColor,
-              border: 'none',
-              width: '2vw',
-              height: '2vw'
+              transform: 'rotate(' + this.state.rotation + ')'
             }}
             />
           </div>
         </div>
         <div className="toggle"
         style={{
-          display: this.state.toggled ? 'initial' : 'none',
-          height: this.state.toggled ? 'fit-content' : '0',
+          display: this.state.shown ? 'initial' : 'none',
+          height: this.state.shown ? 'fit-content' : '0',
           transition: 'all 1s ease-in-out'
         }}>
           Hidden Section
