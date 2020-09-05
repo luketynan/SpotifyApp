@@ -148,7 +148,7 @@ class MediaControls extends Component {
         <svg 
         onClick={() => {
           this.setState({repeat: !this.state.repeat})
-          console.log('Repeat');
+          console.log('Repeat: ' + this.state.repeat);
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 342.24 247.83" xmlns="http://www.w3.org/2000/svg">
@@ -195,7 +195,7 @@ class MediaControls extends Component {
         <svg 
         onClick={() => {
           this.setState({shuffle: !this.state.shuffle})
-          console.log('Shuffle');
+          console.log('Shuffle: ' + this.state.shuffle);
         }}
         style={{...StyleMediaButton}} 
         version="1.1" viewBox="0 0 418.72 289.09" xmlns="http://www.w3.org/2000/svg">
@@ -320,6 +320,20 @@ class DataItem extends Component {
               transform: 'rotate(' + this.state.rotation + ')'
             }}
             />
+
+            <svg 
+              onClick={() => {
+                this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
+              }}
+              style={{...StyleDropDownButton,
+                transition: 'all .1s ease-in-out',
+                transform: 'rotate(' + this.state.rotation + ')'
+              }}
+              version="1.1" viewBox="0 0 197.26 285.7" xmlns="http://www.w3.org/2000/svg">
+              <g transform="translate(-5 -5)">
+                <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" fill="#818181" stroke="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
+              </g>
+            </svg>
           </div>
         </div>
         <div className="toggle"
