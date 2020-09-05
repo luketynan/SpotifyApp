@@ -308,7 +308,7 @@ class DataItem extends Component {
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <p style={{marginRight:'1em'}}>i</p>
+            <i style={{marginRight:'1em'}}>{this.props.index ? this.props.index : 'i'}</i>
             <svg 
               onClick={() => {
                 this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
@@ -350,13 +350,13 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          <DataItem/>
-          <DataItem/>
-          <DataItem/>
-          <DataItem/>
-          <DataItem/>
-          <DataItem/>
-          <DataItem/>
+          <DataItem index='1'/>
+          <DataItem index='2'/>
+          <DataItem index='3'/>
+          <DataItem index='4'/>
+          <DataItem index='5'/>
+          <DataItem index='6'/>
+          <DataItem index='7'/>
         </div>
       </div>
     )
@@ -381,13 +381,13 @@ class FavouriteSection extends Component {
         <div style={{...StyleFrame}}>
           <FavouritesOptions/>
           <div style={{...StyleList}}>
-            <DataItem/>
-            <DataItem/>
-            <DataItem/>
-            <DataItem/>
-            <DataItem/>
-            <DataItem/>
-            <DataItem/>
+            <DataItem index='1'/>
+            <DataItem index='2'/>
+            <DataItem index='3'/>
+            <DataItem index='4'/>
+            <DataItem index='5'/>
+            <DataItem index='6'/>
+            <DataItem index='7'/>
           </div>
         </div>
       </div>
