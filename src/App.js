@@ -252,8 +252,6 @@ class CurrentlyPlaying extends Component {
   constructor() {
     super();
     this.state = {
-      currentProgress: null,
-      totalDuration: null
     }
   }
   render() {
@@ -277,7 +275,7 @@ class CurrentlyPlaying extends Component {
           justifyContent: 'space-between'
         }}>
           <AlbumFrame
-            name='Album'
+            name={this.props.album}
           />
           <div style={{
             width:'75%',
@@ -299,7 +297,7 @@ class CurrentlyPlaying extends Component {
             </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>{this.state.currentProgress || '--'} / {this.state.totalDuration || '--'}</p>
+          <p>{this.props.currentProgress==undefined ? '--' : this.props.currentProgress} / {this.props.totalDuration || '--'}</p>
           <ProgressBar/>
         </div>
       </div>
@@ -428,13 +426,13 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      serverData: {}
+      serverData: {
+      }
     }
   }
 
   componentDidMount() {
-    let accessToken = queryString.parse(window.location.search).access_token;
-    
+    let accessToken = queryString.parse(window.location.search).access_token;    
     if (accessToken != undefined) {
 
       fetch('https://api.spotify.com/v1/me', {
@@ -447,6 +445,37 @@ class App extends Component {
               name: data.display_name,
               profileLink: data.external_urls.spotify,
               images: data.images
+            },
+            current: {
+              progress_ms: 0,
+              is_playing: false,
+              currently_playing_type: "track",
+              item: {
+                album: {
+                  external_urls: {
+                    spotify: "https://open.spotify.com/album/6TJmQnO44YE5BtTxH8pop1"
+                  },
+                  images: [
+                    {
+                      url: 'https://i.scdn.co/image/d49268a8fc0768084f4750cf1647709e89a27172'
+                    }
+                  ],
+                  name: 'Hot Fuss'
+                },
+                artists: [
+                  {
+                    external_urls: {
+                      spotify: "https://open.spotify.com/artist/0C0XlULifJtAgn6ZNCW2eu"
+                    },
+                    name: 'The Killers'
+                  }
+                ],
+                duration_ms: 222075,
+                external_urls: {
+                  spotify: 'https://open.spotify.com/track/0eGsygTp906u18L0Oimnem'
+                },
+                name: 'Mr Brightside'
+              }
             }
           }
         });
@@ -507,8 +536,11 @@ class App extends Component {
               width: '48%'
             }}>
               <CurrentlyPlaying 
-                track='Still Disappointed' 
-                artist='Stormzy'
+                track={this.state.serverData.current && this.state.serverData.current.item.name} 
+                album={this.state.serverData.current && this.state.serverData.current.item.album.name}
+                artist={this.state.serverData.current && this.state.serverData.current.item.artists[0].name}
+                currentProgress={this.state.serverData.current && this.state.serverData.current.progress_ms}
+                totalDuration={this.state.serverData.current && ~~(this.state.serverData.current.item.duration_ms/1000)}
               />
             </div>
             <div style={{
@@ -517,8 +549,8 @@ class App extends Component {
               position: 'relative'
             }}>
               <RecentlyPlayed 
-                items={populateItems(10)
-              }/>
+                items={populateItems(10)}
+              />
             </div>
           </div>
         </div>
@@ -535,12 +567,12 @@ class App extends Component {
           }}>
             <FavouriteSection 
               heading='Artists' 
-              items={populateItems(6)
-            }/>
+              items={populateItems(6)}
+            />
             <FavouriteSection 
               heading='Tracks' 
-              items={populateItems(6)
-            }/>
+              items={populateItems(6)}
+            />
           </div>
         </div>
       </div>
