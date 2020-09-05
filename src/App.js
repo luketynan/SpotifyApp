@@ -40,8 +40,15 @@ let StyleButton = {
   cursor: 'pointer'
 }
 let StyleMediaButton = {...StyleButton,
-  width: '3vw',
-  height: '3vw'
+  width: '2vw',
+  height: '2vw',
+  border: 'outset',
+  borderRadius: '50%',
+  borderColor: 'orange',
+  backgroundColor: 'black',
+  fill: 'orange',
+  stroke: 'orange',
+  padding: '1vw'
 }
 let StyleDropDownButton = {...StyleButton,
   width: '1.5vw',
@@ -55,7 +62,8 @@ let populateItems = (num) => {
     <DataItem 
       index={i+1}
       title={'Name'}
-    />)
+    />
+    )
   }
   return items
 }
@@ -171,16 +179,17 @@ class MediaControls extends Component {
           <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
         </g>
         </svg>
+
         <svg 
         onClick={() => {
           console.log('Back');
         }}
-        style={{...StyleMediaButton, transform:'rotate(180deg)'}} 
-        version="1.1" viewBox="0 0 383.61 285.7" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(-5 -5)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005">
-            <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
-            <path transform="matrix(.56563 0 0 .73579 203.52 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
-          </g>
+        style={{...StyleMediaButton}}
+        version="1.1" viewBox="0 0 391.01 277.27" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(-1.3032 -9.2179)" stroke-linecap="round" stroke-linejoin="round" stroke-width="60">
+          <path d="m217.66 147.85 144.65-108.64v217.28z"/>
+          <path d="m31.301 147.85 144.65-108.64v217.28z"/>
+        </g>
         </svg>
         <svg 
         onClick={() => {
@@ -190,7 +199,7 @@ class MediaControls extends Component {
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 197.26 285.7" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(-5 -5)">
-          <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" fill="#818181" stroke="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
+          <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
         </g>
         </svg>
         <svg 
@@ -248,7 +257,12 @@ class CurrentlyPlaying extends Component {
   }
   render() {
     return (
-      <div>
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
+      }}>
         <h2 style={{
           margin: '0 auto 3% auto',
           textAlign: 'center'
@@ -265,7 +279,7 @@ class CurrentlyPlaying extends Component {
             name='Album'
           />
           <div style={{
-            width:'70%',
+            width:'80%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-around'
@@ -483,7 +497,7 @@ class App extends Component {
           <div style={{...StyleFrame,
             display: 'flex',
             flexDirection: 'row',
-            minHeight: '160px',
+            minHeight: '100px',
             height: '20vw'
           }}>
             <div style={{
@@ -502,7 +516,7 @@ class App extends Component {
               position: 'relative'
             }}>
               <RecentlyPlayed 
-                items={populateItems(6)
+                items={populateItems(10)
               }/>
             </div>
           </div>
