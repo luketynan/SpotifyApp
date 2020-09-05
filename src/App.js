@@ -48,6 +48,18 @@ let StyleDropDownButton = {...StyleButton,
   height: '1.5vw'
 }
 
+let populateItems = (num) => {
+  let items = []
+  for (let i=0;i<num;i++) {
+    items.push(
+    <DataItem 
+      index={i+1}
+      title={'Name'}
+    />)
+  }
+  return items
+}
+
 
 class LoadingPlaceHolder extends Component {
   render() {
@@ -124,7 +136,7 @@ class AlbumFrame extends Component {
         />
         <figcaption style={{
           fontWeight: 'bold'
-        }}>Album name</figcaption>
+        }}>{this.props.name}</figcaption>
       </figure>
     )
   }
@@ -227,6 +239,13 @@ class ProgressBar extends Component {
 }
 
 class CurrentlyPlaying extends Component {
+  constructor() {
+    super();
+    this.state = {
+      currentProgress: null,
+      totalDuration: null
+    }
+  }
   render() {
     return (
       <div>
@@ -242,24 +261,30 @@ class CurrentlyPlaying extends Component {
           flexDirection: 'row',
           justifyContent: 'space-between'
         }}>
-          <AlbumFrame/>
-          <div style={{width:'70%'}}>
+          <AlbumFrame
+            name='Album'
+          />
+          <div style={{
+            width:'70%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-around'
+        }}>
             <div style={{
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '3vw'
+              alignContent: 'space-between',
+              justifyContent: 'space-around'
             }}>
-              <p style={{marginRight:'4vw'}}>Song Name</p>
-              <p>Artist Name</p>
+              <p>{this.props.track}</p>
+              <p>{this.props.artist}</p>
             </div>
             <MediaControls/>
             </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>0 / 0</p>
+          <p>{this.state.currentProgress || '--'} / {this.state.totalDuration || '--'}</p>
           <ProgressBar/>
         </div>
       </div>
@@ -297,18 +322,18 @@ class DataItem extends Component {
               backgroundColor: accentColor,
               border: ['solid', accentColor].join(' '),
               borderRadius: '50%',
-              width: '3vw',
-              height: '3vw',
+              width: '1.5vw',
+              height: '1.5vw',
               marginRight: '1em'
             }}></div>
-            <h3>Item</h3>
+            <h3>{this.props.title}</h3>
           </div>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <i style={{marginRight:'1em'}}>{this.props.index ? this.props.index : 'i'}</i>
+            <i style={{marginRight:'1em'}}>{this.props.index || 'i'}</i>
             <svg 
               onClick={() => {
                 this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
@@ -351,13 +376,7 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          <DataItem index='1'/>
-          <DataItem index='2'/>
-          <DataItem index='3'/>
-          <DataItem index='4'/>
-          <DataItem index='5'/>
-          <DataItem index='6'/>
-          <DataItem index='7'/>
+          {this.props.items}
         </div>
       </div>
     )
@@ -382,13 +401,7 @@ class FavouriteSection extends Component {
         <div style={{...StyleFrame}}>
           <FavouritesOptions/>
           <div style={{...StyleList}}>
-            <DataItem index='1'/>
-            <DataItem index='2'/>
-            <DataItem index='3'/>
-            <DataItem index='4'/>
-            <DataItem index='5'/>
-            <DataItem index='6'/>
-            <DataItem index='7'/>
+            {this.props.items}
           </div>
         </div>
       </div>
@@ -478,14 +491,19 @@ class App extends Component {
               borderRight: sectionSeparator,
               width: '48%'
             }}>
-              <CurrentlyPlaying/>
+              <CurrentlyPlaying 
+                track='Still Disappointed' 
+                artist='Stormzy'
+              />
             </div>
             <div style={{
               paddingLeft: '2vw',
               width: '48%',
               position: 'relative'
             }}>
-              <RecentlyPlayed/>
+              <RecentlyPlayed 
+                items={populateItems(6)
+              }/>
             </div>
           </div>
         </div>
@@ -500,8 +518,14 @@ class App extends Component {
             flexWrap: 'wrap',
             justifyContent: 'space-between'
           }}>
-            <FavouriteSection heading='Artists'/>
-            <FavouriteSection heading='Tracks'/>
+            <FavouriteSection 
+              heading='Artists' 
+              items={populateItems(6)
+            }/>
+            <FavouriteSection 
+              heading='Tracks' 
+              items={populateItems(6)
+            }/>
           </div>
         </div>
       </div>
