@@ -13,6 +13,8 @@ let sectionSeparator = ['solid', sectionSeparatorWidth, accentColor].join(' ');
 let outerSpacing = '3vw';
 let innerSpacing = '2vw';
 
+let topSectionHeight = null;
+
 let StyleSection = {
   margin: '0',
   padding: outerSpacing.concat(' 0'),
@@ -24,10 +26,25 @@ let StyleFrame = {
   borderRadius: borderCurve,
   padding: innerSpacing
 }
-let StyleItemList = {
+let StyleList = {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'space-between'
+  alignItems: 'space-between',
+  marginTop: '.5vw',
+  paddingBottom: '.5vw'
+}
+
+class LoadingPlaceHolder extends Component {
+  render() {
+    return (
+      <div style={{
+        textAlign: 'center',
+        alignItems: 'center'
+      }}>
+        Loading...
+      </div>
+    )
+  }
 }
 
 class LoginScreen extends Component {
@@ -67,25 +84,11 @@ class LoginScreen extends Component {
             padding: '1vw',
             cursor: 'pointer',
             marginTop: '5%',
-            fontWeight: 'bold',
-            boxShadow: '1px 1px black'
+            fontWeight: 'bold'
           }}>
             Log in to Spotify
           </button>
         </div>
-      </div>
-    )
-  }
-}
-
-class LoadingPlaceHolder extends Component {
-  render() {
-    return (
-      <div style={{
-        textAlign: 'center',
-        alignItems: 'center'
-      }}>
-        Loading...
       </div>
     )
   }
@@ -117,14 +120,13 @@ class MediaControls extends Component {
     return (
       <div style={{
         display: 'flex',
-        justifyContent: 'space-evenly',
-        margin: '2vw'
+        justifyContent: 'space-evenly'
       }}>
-        <p>o</p>
-        <p>&lt;&lt;</p>
-        <p>&gt;</p>
-        <p>&gt;&gt;</p>
-        <p>x</p>
+        <button>o</button>
+        <button>&lt;&lt;</button>
+        <button>&gt;</button>
+        <button>&gt;&gt;</button>
+        <button>x</button>
       </div>
     )
   }
@@ -148,9 +150,11 @@ class ProgressBar extends Component {
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      <div>
+      <div style={{
+        width: '100%'
+      }}>
         <h2 style={{
-          margin: '0 auto 2vw auto',
+          margin: '0 auto 3% auto',
           textAlign: 'center'
         }}>
           Currently Playing
@@ -162,16 +166,17 @@ class CurrentlyPlaying extends Component {
           justifyContent: 'space-between'
         }}>
           <AlbumFrame/>
-          <div>
+          <div style={{width:'70%'}}>
             <div style={{
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-around'
+              justifyContent: 'space-between',
+              marginBottom: '3vw'
             }}>
-              <p style={{fontWeight: 'bold'}}>Current track name</p>
-              <p>Current track artists</p>
+              <p style={{marginRight:'4vw'}}>Song Name</p>
+              <p>Artist Name</p>
             </div>
             <MediaControls/>
             </div>
@@ -185,68 +190,110 @@ class CurrentlyPlaying extends Component {
   }
 }
 
-class RecentlyPlayed extends Component {
-  render() {
-    return (
-      <div>
-        <h2>Recently Played</h2>
-        <div style={{...StyleItemList, overflow:'auto'}}>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-          <FavouriteItem/>
-        </div>
-      </div>
-    )
+class DataItem extends Component {
+  constructor() {
+    super();
+    this.state = {
+      toggled: false
+    }
   }
-}
-
-class FavouriteItem extends Component {
   render() {
     return (
       <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        marginTop: '1.5vw',
+        paddingBottom: '1.5vw',
         borderBottom: itemSeparator
       }}>
         <div style={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          flexDirection: 'row',
+          flexWrap: 'nowrap',
+          alignItems: 'center',
+          justifyContent: 'space-between'
         }}>
           <div style={{
-            backgroundColor: accentColor,
-            border: ['solid', accentColor].join(' '),
-            borderRadius: '50%',
-            width: '3vw',
-            height: '3vw',
-            marginRight: '1em'
-          }}></div>
-          <h3>Item</h3>
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div style={{
+              backgroundColor: accentColor,
+              border: ['solid', accentColor].join(' '),
+              borderRadius: '50%',
+              width: '3vw',
+              height: '3vw',
+              marginRight: '1em'
+            }}></div>
+            <h3>Item</h3>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <p style={{marginRight:'1em'}}>i</p>
+            <button onClick={() => {
+              if (!this.state.toggled) {
+                this.setState({toggled: true})
+                this.setState({rotation: '90deg'})
+              }
+              else {
+                this.setState({toggled: false})
+                this.setState({rotation: '0deg'})
+              }
+            }}
+            style={{
+              transition: 'all .1s ease-in-out',
+              transform: 'rotate(' + this.state.rotation + ')'
+            }}
+            >&gt;</button>
+          </div>
         </div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+        <div className="toggle"
+        style={{
+          display: this.state.toggled ? 'initial' : 'none',
+          height: this.state.toggled ? 'fit-content' : '0',
+          transition: 'all 1s ease-in-out'
         }}>
-          <p style={{marginRight:'1em'}}>i</p>
-          <p>&gt;</p>
+          Hidden Section
         </div>
       </div>
     )
   }
 }
 
+class RecentlyPlayed extends Component {
+  render() {
+    return (
+      <div style={{
+        height: '100%',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start'
+      }}>
+        <h2>Recently Played</h2>
+        <div style={{...StyleList, overflow: 'auto'}}>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+          <DataItem/>
+        </div>
+      </div>
+    )
+  }
+}
+
+// <<<<<<< HEAD
 
 
-class FavouritesOptionsModule extends Component {
+class FavouritesOptionsModule extends Component {}
+// =======
+class FavouritesOptions extends Component {
+// >>>>>>> a7b63c07e0d7ef2a113a73c20e9ea43eee57a61c
   render() {
     return (
     
@@ -263,15 +310,15 @@ class FavouriteSection extends Component {
       <div style={{flex: '0 1 48.5%'}}>
         <h2>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
-          <FavouritesOptionsModule/>
-          <div style={{...StyleItemList}}>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
-            <FavouriteItem/>
+          <FavouritesOptions/>
+          <div style={{...StyleList}}>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
+            <DataItem/>
           </div>
         </div>
       </div>
@@ -299,7 +346,8 @@ class App extends Component {
           serverData: {
             user: {
               name: data.display_name,
-              profileLink: data.external_urls.spotify
+              profileLink: data.external_urls.spotify,
+              images: data.images
             }
           }
         });
@@ -329,15 +377,21 @@ class App extends Component {
           width: '2em',
           marginRight: '1em'
           }}
-            src='favicon.ico'/>
+            src={this.state.serverData.user ?
+              'favicon.ico'
+              :
+              'favicon.ico'
+            }
+          />
           <figcaption>
             <a style={{
               color: 'inherit',
               textDecoration: 'none',
               fontWeight: 'bold'
             }}
-            href={this.state.serverData.user ? this.state.serverData.user.profileLink : ''}>
-              {this.state.serverData.user ? this.state.serverData.user.name : '---'}
+            target='blank'
+            href={this.state.serverData.user ? this.state.serverData.user.profileLink : '#'}>
+              {this.state.serverData.user ? this.state.serverData.user.name : 'User name not found'}
             </a>
             </figcaption>
         </figure>
@@ -346,17 +400,21 @@ class App extends Component {
           <div style={{...StyleFrame,
             display: 'grid',
             gridTemplateColumns: '50% 50%',
-            gridTemplateRows: 'auto',
+            gridTemplateRows: '20vw',
             gridTemplateAreas: 'CurrentlyPlaying RecentlyPlayed'
           }}>
             <div style={{
               paddingRight: innerSpacing,
-              borderRight: sectionSeparator
+              borderRight: sectionSeparator,
+              height: 'fit-content'
             }}>
               <CurrentlyPlaying/>
             </div>
             <div style={{
-              paddingLeft: innerSpacing
+              position: 'relative',
+              width: '100%',
+              paddingLeft: innerSpacing,
+              textAlign: 'center'
             }}>
               <RecentlyPlayed/>
             </div>

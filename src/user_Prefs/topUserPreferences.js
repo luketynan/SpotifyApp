@@ -36,14 +36,34 @@ export default User_Preference_Nav
 
 
 class User_Preference_Slider extends Component{
+  constructor() {
+    super()
+    this.state = {
+      currentValue:30
+    }
+  }
 
-
+  getCurrentValue(new_Value) {
+    this.setState({
+      currentValue: new_Value
+    })
+  }
 
     render(){
 
         function valuetext(value) {
+          // getValue(value);
             return `${value}objects`;
+            
           }
+
+        function getValue(value) {
+            return value;
+        }
+
+
+
+
     
     return(
       <div className="slider">
@@ -59,6 +79,7 @@ class User_Preference_Slider extends Component{
             marks
             min={1}
             max={50}
+            onChange={() => this.getCurrentValue(getValue)}
         />
       </div>
 
@@ -85,6 +106,40 @@ class User_Preference_Button extends Component {
 
 class User_Preference_Timeform extends Component {
 
+    constructor() {
+      super()
+      this.state = {
+        long:false,
+        medium:true,
+        short:false
+
+      }
+    }
+
+    longClicked() {
+      this.setState({
+        long:true,
+        medium:false,
+        short:false
+      })
+    }
+
+    mediumClicked() {
+      this.setState({
+        long:false,
+        medium:true,
+        short:false
+      })
+    }
+
+    shortClicked() {
+      this.setState({
+        long:false,
+        medium:false,
+        short:true
+      })
+    }
+
     render() {
 
 
@@ -104,18 +159,21 @@ class User_Preference_Timeform extends Component {
               control={<Radio color="primary" />}
               label="Long"
               labelPlacement="top"
+              onClick={() => this.longClicked()}
             />
             <FormControlLabel
               value="start"
               control={<Radio color="primary" />}
               label="Medium"
               labelPlacement="top"
+              onClick={() => this.mediumClicked()}
             />
             <FormControlLabel
               value="bottom"
               control={<Radio color="primary" />}
               label="Short"
               labelPlacement="top"
+              onClick={() => this.shortClicked()}
             />
           </RadioGroup>
         </FormControl>
