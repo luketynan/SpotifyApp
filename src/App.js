@@ -469,7 +469,7 @@ class App extends Component {
           <div style={{...StyleFrame,
             display: 'flex',
             flexDirection: 'row',
-            minHeight: '120px',
+            minHeight: '160px',
             height: '20vw'
           }}>
             <div style={{
