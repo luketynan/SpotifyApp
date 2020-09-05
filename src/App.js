@@ -326,9 +326,10 @@ class DataItem extends Component {
         </div>
         <div className="toggle"
         style={{
-          display: this.state.shown ? 'initial' : 'none',
-          height: this.state.shown ? 'fit-content' : '0',
-          transition: 'all 1s ease-in-out'
+          height: 'auto',
+          maxHeight: this.state.shown ? '20px' : '0',
+          overflow: 'hidden',
+          transition: 'max-height .5s ease-in'
         }}>
           Hidden Section
         </div>
