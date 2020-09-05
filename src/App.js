@@ -60,6 +60,7 @@ let populateItems = (num) => {
   for (let i=0;i<num;i++) {
     items.push(
     <DataItem 
+      key={i}
       index={i+1}
       title={'Name'}
     />
@@ -163,7 +164,7 @@ class MediaControls extends Component {
     return (
       <div style={{
         display: 'flex',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-between'
       }}>
         <svg 
         onClick={() => {
@@ -186,7 +187,7 @@ class MediaControls extends Component {
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 391.01 277.27" xmlns="http://www.w3.org/2000/svg">
-        <g transform="translate(-1.3032 -9.2179)" stroke-linecap="round" stroke-linejoin="round" stroke-width="60">
+        <g transform="translate(-1.3032 -9.2179)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="60">
           <path d="m217.66 147.85 144.65-108.64v217.28z"/>
           <path d="m31.301 147.85 144.65-108.64v217.28z"/>
         </g>
@@ -279,7 +280,7 @@ class CurrentlyPlaying extends Component {
             name='Album'
           />
           <div style={{
-            width:'80%',
+            width:'75%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-around'
@@ -435,6 +436,7 @@ class App extends Component {
     let accessToken = queryString.parse(window.location.search).access_token;
     
     if (accessToken != undefined) {
+
       fetch('https://api.spotify.com/v1/me', {
         headers: {'Authorization': 'Bearer ' + accessToken}
       }).then((response) => response.json())
@@ -449,7 +451,6 @@ class App extends Component {
           }
         });
         console.log(data);
-        console.log(this.state.serverData);
       })
     }
   }
