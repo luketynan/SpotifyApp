@@ -229,9 +229,7 @@ class ProgressBar extends Component {
 class CurrentlyPlaying extends Component {
   render() {
     return (
-      <div style={{
-        width: '100%'
-      }}>
+      <div>
         <h2 style={{
           margin: '0 auto 3% auto',
           textAlign: 'center'
@@ -311,16 +309,6 @@ class DataItem extends Component {
             alignItems: 'center'
           }}>
             <p style={{marginRight:'1em'}}>i</p>
-            <img src='roundedCornerTriangle.svg'
-            onClick={() => {
-              this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
-            }}
-            style={{...StyleDropDownButton,
-              transition: 'all .1s ease-in-out',
-              transform: 'rotate(' + this.state.rotation + ')'
-            }}
-            />
-
             <svg 
               onClick={() => {
                 this.state.shown ? this.setState({rotation: '0deg', shown: false}) : this.setState({rotation: '90deg', shown: true})
@@ -357,7 +345,8 @@ class RecentlyPlayed extends Component {
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'start'
+        justifyContent: 'start',
+        textAlign: 'center'
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
@@ -478,23 +467,22 @@ class App extends Component {
         
         <div style={{...StyleSection}}>
           <div style={{...StyleFrame,
-            display: 'grid',
-            gridTemplateColumns: '50% 50%',
-            gridTemplateRows: '20vw',
-            gridTemplateAreas: 'CurrentlyPlaying RecentlyPlayed'
+            display: 'flex',
+            flexDirection: 'row',
+            minHeight: '120px',
+            height: '20vw'
           }}>
             <div style={{
-              paddingRight: innerSpacing,
+              paddingRight: '2vw',
               borderRight: sectionSeparator,
-              height: 'fit-content'
+              width: '48%'
             }}>
               <CurrentlyPlaying/>
             </div>
             <div style={{
-              position: 'relative',
-              width: '100%',
-              paddingLeft: innerSpacing,
-              textAlign: 'center'
+              paddingLeft: '2vw',
+              width: '48%',
+              position: 'relative'
             }}>
               <RecentlyPlayed/>
             </div>
