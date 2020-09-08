@@ -42,13 +42,9 @@ let StyleButton = {
 let StyleMediaButton = {...StyleButton,
   width: '2vw',
   height: '2vw',
-  border: 'outset',
-  borderRadius: '50%',
-  borderColor: 'orange',
-  backgroundColor: 'black',
-  fill: 'orange',
-  stroke: 'orange',
-  padding: '1vw'
+  fill: accentColor,
+  stroke: accentColor,
+  padding: '.5vw'
 }
 let StyleDropDownButton = {...StyleButton,
   width: '1.5vw',
@@ -365,7 +361,7 @@ class DataItem extends Component {
         <div className="toggle"
         style={{
           height: 'auto',
-          maxHeight: this.state.shown ? '20px' : '0',
+          maxHeight: this.state.shown ? '2vw' : '0',
           overflow: 'hidden',
           transition: 'max-height .5s ease-in'
         }}>
@@ -389,7 +385,6 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          {console.log('RP Props', this.props)}
           {this.props.items != undefined ?
             populateList(this.props.items)
             :
@@ -438,66 +433,43 @@ class App extends Component {
       }).then((response) => response.json())
       .then((data) => {
         this.setState({
-          serverData: {
-            user: {
-              name: data.display_name,
-              profileLink: data.external_urls.spotify,
-              images: data.images
-            },
-            current: {
-              is_playing: false,
-              progress_ms: 0,
-              duration_ms: 222075,
-              name: 'Mr Brightside',
-              spotifyLink: 'https://open.spotify.com/track/0eGsygTp906u18L0Oimnem',
-              album: {
-                name: 'Hot Fuss',
-                spotifyLink: "https://open.spotify.com/album/6TJmQnO44YE5BtTxH8pop1",
-                images: [
-                  {
-                    url: 'https://i.scdn.co/image/d49268a8fc0768084f4750cf1647709e89a27172'
-                  }
-                ]
-              },
-              artists: [
-                {
-                  name: 'The Killers',
-                  spotifyLink: "https://open.spotify.com/artist/0C0XlULifJtAgn6ZNCW2eu"
-                }
-              ]
-            },
-            recent: {
-              items: [
-                {
-                  name: 'Still Disappointed'
-                },
-                {
-                  name: 'Heart of Courage'
-                }
-              ]
-            },
-            favourites: {
-              artists: [
-                {
-                  name: 'Ed Sheeran'
-                },
-                {
-                  name: 'Linkin Park'
-                }
-              ],
-              tracks: [
-                {
-                  name: 'Take me Back to London'
-                },
-                {
-                  name: 'What I\'ve Done'
-                }
-              ]
-            }
+          user: {
+            name: data.display_name,
+            profileLink: data.external_urls.spotify,
+            images: data.images
           }
         });
-        console.log(data);
-        console.log(this.state.serverData)
+      })
+      
+      fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+        headers: {'Authorization': 'Bearer ' + accessToken}
+      }).then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          current: {
+            is_playing: data.is_playing,
+            progress_ms: data.progress_ms,
+            duration_ms: data.duration_ms,
+            name: data.item.name,
+            spotifyLink: data.context.external_urls.spotify,
+            album: {
+              name: data.item.album.name,
+              spotifyLink: data.item.album.external_urls.spotify,
+              images: [
+                {
+                  url: data.item.album.images[2].url
+                },
+              ]
+            },
+            artists: [
+              {
+                name: data.item.artists[0].name,
+                spotifyLink: data.item.artists[0].external_urls.spotify
+              }
+            ]
+          }
+        })
+        console.log(data)
       })
     }
   }
@@ -522,7 +494,7 @@ class App extends Component {
           width: '2em',
           marginRight: '1em'
           }}
-            src={this.state.serverData.user ?
+            src={this.state.user ?
               'favicon.ico'
               :
               'favicon.ico'
@@ -535,8 +507,8 @@ class App extends Component {
               fontWeight: 'bold'
             }}
             target='blank'
-            href={this.state.serverData.user ? this.state.serverData.user.profileLink : '#'}>
-              {this.state.serverData.user ? this.state.serverData.user.name : 'User name not found'}
+            href={this.state.user ? this.state.user.profileLink : '#'}>
+              {this.state.user ? this.state.user.name : 'User name not found'}
             </a>
             </figcaption>
         </figure>
@@ -544,9 +516,7 @@ class App extends Component {
         <div style={{...StyleSection}}>
           <div style={{...StyleFrame,
             display: 'flex',
-            flexDirection: 'row',
-            minHeight: '100px',
-            height: '20vw'
+            flexDirection: 'row'
           }}>
             <div style={{
               paddingRight: '2vw',
@@ -555,28 +525,28 @@ class App extends Component {
             }}>
               <CurrentlyPlaying 
                 trackName={
-                  this.state.serverData.current 
+                  this.state.current 
                   && 
-                  this.state.serverData.current.name
+                  this.state.current.name
                 } 
                 albumName={
-                  this.state.serverData.current 
+                  this.state.current 
                   && 
-                  this.state.serverData.current.album.name
+                  this.state.current.album.name
                 }
                 artistName={
-                  this.state.serverData.current 
+                  this.state.current 
                   && 
-                  this.state.serverData.current.artists[0].name
+                  this.state.current.artists[0].name
                 }
-                currentProgress={this.state.serverData.current
+                currentProgress={this.state.current
                   && 
-                  this.state.serverData.current.progress_ms
+                  this.state.current.progress_ms
                 }
                 totalDuration={
-                  this.state.serverData.current 
+                  this.state.current 
                   && 
-                  ~~(this.state.serverData.current.duration_ms/1000)
+                  ~~(this.state.current.duration_ms/1000)
                 }
               />
             </div>

@@ -3,7 +3,7 @@
 *{
   margin: 0;
   padding: 0;
-  font-size: max(12px, 1.5vw);
+  font-size: 12px;
   font-family: sans-serif;
 }
 
@@ -12,9 +12,9 @@ html {
 }
 
 h1 {
-  font-size: max(16px, 3vw);
+  font-size: 20px;
 }
 
 h2 {
-  font-size: max(16px, 2vw);
+  font-size: 16px;
 }
