@@ -293,7 +293,7 @@ class CurrentlyPlaying extends Component {
             </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>{this.props.currentProgress==undefined ? '--' : this.props.currentProgress} / {this.props.totalDuration || '--'}</p>
+          <p>{this.props.currentProgress==undefined ? '--' : Math.floor(this.props.currentProgress/1000)} / {this.props.totalDuration==undefined ? '--' : Math.floor(this.props.totalDuration/1000)}</p>
           <ProgressBar/>
         </div>
       </div>
@@ -449,7 +449,7 @@ class App extends Component {
           current: {
             is_playing: data.is_playing,
             progress_ms: data.progress_ms,
-            duration_ms: data.duration_ms,
+            duration_ms: data.item.duration_ms,
             name: data.item.name,
             spotifyLink: data.context.external_urls.spotify,
             album: {
@@ -469,7 +469,6 @@ class App extends Component {
             ]
           }
         })
-        console.log(data)
       })
     }
   }
@@ -539,14 +538,15 @@ class App extends Component {
                   && 
                   this.state.current.artists[0].name
                 }
-                currentProgress={this.state.current
+                currentProgress={
+                  this.state.current
                   && 
                   this.state.current.progress_ms
                 }
                 totalDuration={
                   this.state.current 
                   && 
-                  ~~(this.state.current.duration_ms/1000)
+                  this.state.current.duration_ms
                 }
               />
             </div>
