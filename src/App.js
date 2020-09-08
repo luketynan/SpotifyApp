@@ -55,14 +55,14 @@ let StyleDropDownButton = {...StyleButton,
   height: '1.5vw'
 }
 
-let populateItems = (num) => {
+let populateList = (data) => {
   let items = []
-  for (let i=0;i<num;i++) {
+  for (let i=0 ; i < data.length ; i++) {
     items.push(
     <DataItem 
       key={i}
       index={i+1}
-      title={'Name'}
+      title={data[i].name}
     />
     )
   }
@@ -275,7 +275,7 @@ class CurrentlyPlaying extends Component {
           justifyContent: 'space-between'
         }}>
           <AlbumFrame
-            name={this.props.album}
+            name={this.props.albumName}
           />
           <div style={{
             width:'75%',
@@ -290,8 +290,8 @@ class CurrentlyPlaying extends Component {
               alignContent: 'space-between',
               justifyContent: 'space-around'
             }}>
-              <p>{this.props.track}</p>
-              <p>{this.props.artist}</p>
+              <p>{this.props.trackName}</p>
+              <p>{this.props.artistName}</p>
             </div>
             <MediaControls/>
             </div>
@@ -389,18 +389,13 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          {this.props.items}
+          {console.log('RP Props', this.props)}
+          {this.props.items != undefined ?
+            populateList(this.props.items)
+            :
+            <LoadingPlaceHolder/>
+          }
         </div>
-      </div>
-    )
-  }
-}
-
-class FavouritesOptions extends Component {
-  render() {
-    return (
-      <div>
-        <i>Options Bar</i>
       </div>
     )
   }
@@ -412,9 +407,12 @@ class FavouriteSection extends Component {
       <div style={{flex: '0 1 48.5%'}}>
         <h2>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
-          <FavouritesOptions/>
           <div style={{...StyleList}}>
-            {this.props.items}
+          {this.props.items != undefined ?
+            populateList(this.props.items)
+            :
+            <LoadingPlaceHolder/>
+          }
           </div>
         </div>
       </div>
@@ -447,39 +445,59 @@ class App extends Component {
               images: data.images
             },
             current: {
-              progress_ms: 0,
               is_playing: false,
-              currently_playing_type: "track",
-              item: {
-                album: {
-                  external_urls: {
-                    spotify: "https://open.spotify.com/album/6TJmQnO44YE5BtTxH8pop1"
-                  },
-                  images: [
-                    {
-                      url: 'https://i.scdn.co/image/d49268a8fc0768084f4750cf1647709e89a27172'
-                    }
-                  ],
-                  name: 'Hot Fuss'
-                },
-                artists: [
+              progress_ms: 0,
+              duration_ms: 222075,
+              name: 'Mr Brightside',
+              spotifyLink: 'https://open.spotify.com/track/0eGsygTp906u18L0Oimnem',
+              album: {
+                name: 'Hot Fuss',
+                spotifyLink: "https://open.spotify.com/album/6TJmQnO44YE5BtTxH8pop1",
+                images: [
                   {
-                    external_urls: {
-                      spotify: "https://open.spotify.com/artist/0C0XlULifJtAgn6ZNCW2eu"
-                    },
-                    name: 'The Killers'
+                    url: 'https://i.scdn.co/image/d49268a8fc0768084f4750cf1647709e89a27172'
                   }
-                ],
-                duration_ms: 222075,
-                external_urls: {
-                  spotify: 'https://open.spotify.com/track/0eGsygTp906u18L0Oimnem'
+                ]
+              },
+              artists: [
+                {
+                  name: 'The Killers',
+                  spotifyLink: "https://open.spotify.com/artist/0C0XlULifJtAgn6ZNCW2eu"
+                }
+              ]
+            },
+            recent: {
+              items: [
+                {
+                  name: 'Still Disappointed'
                 },
-                name: 'Mr Brightside'
-              }
+                {
+                  name: 'Heart of Courage'
+                }
+              ]
+            },
+            favourites: {
+              artists: [
+                {
+                  name: 'Ed Sheeran'
+                },
+                {
+                  name: 'Linkin Park'
+                }
+              ],
+              tracks: [
+                {
+                  name: 'Take me Back to London'
+                },
+                {
+                  name: 'What I\'ve Done'
+                }
+              ]
             }
           }
         });
         console.log(data);
+        console.log(this.state.serverData)
       })
     }
   }
@@ -496,7 +514,7 @@ class App extends Component {
             display: 'flex',
             flexDirection: 'row',
             borderBottom: sectionSeparator,
-            paddingBottom: '5px',
+            paddingBottom: '.5vw',
             alignItems: 'center'
         }}>
           <img style= {{
@@ -536,11 +554,30 @@ class App extends Component {
               width: '48%'
             }}>
               <CurrentlyPlaying 
-                track={this.state.serverData.current && this.state.serverData.current.item.name} 
-                album={this.state.serverData.current && this.state.serverData.current.item.album.name}
-                artist={this.state.serverData.current && this.state.serverData.current.item.artists[0].name}
-                currentProgress={this.state.serverData.current && this.state.serverData.current.progress_ms}
-                totalDuration={this.state.serverData.current && ~~(this.state.serverData.current.item.duration_ms/1000)}
+                trackName={
+                  this.state.serverData.current 
+                  && 
+                  this.state.serverData.current.name
+                } 
+                albumName={
+                  this.state.serverData.current 
+                  && 
+                  this.state.serverData.current.album.name
+                }
+                artistName={
+                  this.state.serverData.current 
+                  && 
+                  this.state.serverData.current.artists[0].name
+                }
+                currentProgress={this.state.serverData.current
+                  && 
+                  this.state.serverData.current.progress_ms
+                }
+                totalDuration={
+                  this.state.serverData.current 
+                  && 
+                  ~~(this.state.serverData.current.duration_ms/1000)
+                }
               />
             </div>
             <div style={{
@@ -549,7 +586,11 @@ class App extends Component {
               position: 'relative'
             }}>
               <RecentlyPlayed 
-                items={populateItems(10)}
+                items={
+                  this.state.serverData.recent 
+                  && 
+                  this.state.serverData.recent.items
+                }
               />
             </div>
           </div>
@@ -567,11 +608,19 @@ class App extends Component {
           }}>
             <FavouriteSection 
               heading='Artists' 
-              items={populateItems(6)}
+              items={
+                this.state.serverData.favourites
+                &&
+                this.state.serverData.favourites.artists
+              }
             />
             <FavouriteSection 
               heading='Tracks' 
-              items={populateItems(6)}
+              items={
+                this.state.serverData.favourites
+                &&
+                this.state.serverData.favourites.tracks
+              }
             />
           </div>
         </div>
