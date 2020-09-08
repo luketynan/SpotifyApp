@@ -137,7 +137,7 @@ class AlbumFrame extends Component {
           width: '100%',
           borderRadius: '.5vw'
         }} 
-        src='https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/media/2014/bmimgupl_36616_5db6a7fa6ece2Krept-K_26_600_600.jpg'
+        src={this.props.pic}
         />
         <figcaption style={{
           fontWeight: 'bold'
@@ -272,6 +272,7 @@ class CurrentlyPlaying extends Component {
         }}>
           <AlbumFrame
             name={this.props.albumName}
+            pic={this.props.albumPic}
           />
           <div style={{
             width:'75%',
@@ -293,7 +294,7 @@ class CurrentlyPlaying extends Component {
             </div>
         </div>
         <div style={{textAlign: 'center'}}>
-          <p>{this.props.currentProgress==undefined ? '--' : Math.floor(this.props.currentProgress/1000)} / {this.props.totalDuration==undefined ? '--' : Math.floor(this.props.totalDuration/1000)}</p>
+          <p>{this.props.currentProgress===undefined ? '--' : Math.floor(this.props.currentProgress/1000)} / {this.props.totalDuration===undefined ? '--' : Math.floor(this.props.totalDuration/1000)}</p>
           <ProgressBar/>
         </div>
       </div>
@@ -385,7 +386,7 @@ class RecentlyPlayed extends Component {
       }}>
         <h2>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
-          {this.props.items != undefined ?
+          {this.props.items !== undefined ?
             populateList(this.props.items)
             :
             <LoadingPlaceHolder/>
@@ -403,7 +404,7 @@ class FavouriteSection extends Component {
         <h2>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
           <div style={{...StyleList}}>
-          {this.props.items != undefined ?
+          {this.props.items !== undefined ?
             populateList(this.props.items)
             :
             <LoadingPlaceHolder/>
@@ -426,7 +427,7 @@ class App extends Component {
 
   componentDidMount() {
     let accessToken = queryString.parse(window.location.search).access_token;    
-    if (accessToken != undefined) {
+    if (accessToken !== undefined) {
 
       fetch('https://api.spotify.com/v1/me', {
         headers: {'Authorization': 'Bearer ' + accessToken}
@@ -469,6 +470,7 @@ class App extends Component {
             ]
           }
         })
+        console.log(data)
       })
     }
   }
@@ -532,6 +534,11 @@ class App extends Component {
                   this.state.current 
                   && 
                   this.state.current.album.name
+                }
+                albumPic={
+                  this.state.current 
+                  && 
+                  this.state.current.album.images[0].url
                 }
                 artistName={
                   this.state.current 
