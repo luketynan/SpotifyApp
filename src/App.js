@@ -133,12 +133,22 @@ class AlbumFrame extends Component {
         textAlign: 'center',
         width: '20%'
       }}>
-        <img style={{
-          width: '100%',
-          borderRadius: '.5vw'
-        }} 
-        src={this.props.pic}
-        />
+        {this.props.pic ?
+          <img style={{
+            width: '100%',
+            borderRadius: '.5vw'
+          }} 
+          src={this.props.pic}
+          />
+        :
+          <div style={{
+            width: '10vw',
+            height: '10vw',
+            backgroundColor: accentColor,
+            borderRadius: borderCurve
+          }}></div>
+        }
+        
         <figcaption style={{
           fontWeight: 'bold'
         }}>{this.props.name}</figcaption>
@@ -287,7 +297,11 @@ class CurrentlyPlaying extends Component {
               alignContent: 'space-between',
               justifyContent: 'space-around'
             }}>
-              <p>{this.props.trackName}</p>
+              {this.props.trackName ?
+                <p>{this.props.trackName}</p>
+                :
+                <b>There doesn't seem to be anything playing</b>
+              }
               <p>{this.props.artistName}</p>
             </div>
             <MediaControls/>
@@ -443,32 +457,46 @@ class App extends Component {
       
       fetch('https://api.spotify.com/v1/me/player/currently-playing', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => response.json())
+      }).then((response) => {
+        if (response.status == '204') {
+          console.log('nothing found')
+          return null
+        }
+        else {
+          console.log('something is playing')
+          return response.json()
+        }
+      })
       .then((data) => {
-        this.setState({
-          current: {
-            is_playing: data.is_playing,
-            progress_ms: data.progress_ms,
-            duration_ms: data.item.duration_ms,
-            name: data.item.name,
-            spotifyLink: data.context.external_urls.spotify,
-            album: {
-              name: data.item.album.name,
-              spotifyLink: data.item.album.external_urls.spotify,
-              images: [
+        if (data !== null) {
+          this.setState({
+            current: {
+              is_playing: data.is_playing,
+              progress_ms: data.progress_ms,
+              duration_ms: data.item.duration_ms,
+              name: data.item.name,
+              spotifyLink: data.context.external_urls.spotify,
+              album: {
+                name: data.item.album.name,
+                spotifyLink: data.item.album.external_urls.spotify,
+                images: [
+                  {
+                    url: data.item.album.images[2].url
+                  },
+                ]
+              },
+              artists: [
                 {
-                  url: data.item.album.images[2].url
-                },
+                  name: data.item.artists[0].name,
+                  spotifyLink: data.item.artists[0].external_urls.spotify
+                }
               ]
-            },
-            artists: [
-              {
-                name: data.item.artists[0].name,
-                spotifyLink: data.item.artists[0].external_urls.spotify
-              }
-            ]
-          }
-        })
+            }
+          })
+        }
+        else {
+          console.log('nothing playing')
+        }
         console.log(this.state)
       })
     }
