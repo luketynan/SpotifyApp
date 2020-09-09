@@ -420,10 +420,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      serverData: {
-      }
     }
   }
+  
 
   componentDidMount() {
     let accessToken = queryString.parse(window.location.search).access_token;    
@@ -470,7 +469,7 @@ class App extends Component {
             ]
           }
         })
-        console.log(data)
+        console.log(this.state)
       })
     }
   }
@@ -563,11 +562,11 @@ class App extends Component {
               position: 'relative'
             }}>
               <RecentlyPlayed 
-                items={
-                  this.state.serverData.recent 
-                  && 
-                  this.state.serverData.recent.items
-                }
+                // items={
+                //   this.state.recent 
+                //   && 
+                //   this.state.recent.items
+                // }
               />
             </div>
           </div>
@@ -585,19 +584,19 @@ class App extends Component {
           }}>
             <FavouriteSection 
               heading='Artists' 
-              items={
-                this.state.serverData.favourites
-                &&
-                this.state.serverData.favourites.artists
-              }
+              // items={
+              //   this.state.favourites
+              //   &&
+              //   this.state.favourites.artists
+              // }
             />
             <FavouriteSection 
               heading='Tracks' 
-              items={
-                this.state.serverData.favourites
-                &&
-                this.state.serverData.favourites.tracks
-              }
+              // items={
+              //   this.state.favourites
+              //   &&
+              //   this.state.favourites.tracks
+              // }
             />
           </div>
         </div>
