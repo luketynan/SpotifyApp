@@ -18,6 +18,10 @@ let StyleSection = {
   borderBottom: sectionSeparator,
   borderColor: accentColor
 }
+let StyleHeading = {
+  margin: '0 auto 1vw auto',
+  textAlign: 'center'
+}
 let StyleFrame = {
   backgroundColor: frameBackgroundColor,
   borderRadius: borderCurve,
@@ -268,10 +272,7 @@ class CurrentlyPlaying extends Component {
         flexDirection: 'column',
         justifyContent: 'space-evenly'
       }}>
-        <h2 style={{
-          margin: '0 auto 3% auto',
-          textAlign: 'center'
-        }}>
+        <h2 style={{...StyleHeading}}>
           Currently Playing
         </h2>
 
@@ -289,7 +290,7 @@ class CurrentlyPlaying extends Component {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-around'
-        }}>
+          }}>
             <div style={{
               textAlign: 'center',
               display: 'flex',
@@ -309,7 +310,7 @@ class CurrentlyPlaying extends Component {
                 }}>{this.props.artistName}</p>
             </div>
             <MediaControls/>
-            </div>
+          </div>
         </div>
         <div style={{textAlign: 'center'}}>
           <p>{this.props.currentProgress===undefined ? '--' : Math.floor(this.props.currentProgress/1000)} / {this.props.totalDuration===undefined ? '--' : Math.floor(this.props.totalDuration/1000)}</p>
@@ -402,7 +403,7 @@ class RecentlyPlayed extends Component {
         justifyContent: 'start',
         textAlign: 'center'
       }}>
-        <h2>Recently Played</h2>
+        <h2 style={{...StyleHeading}}>Recently Played</h2>
         <div style={{...StyleList, overflow: 'auto'}}>
           {this.props.items !== undefined ?
             populateList(this.props.items)
@@ -419,7 +420,7 @@ class FavouriteSection extends Component {
   render() {
     return (
       <div style={{flex: '0 1 48.5%'}}>
-        <h2>{this.props.heading}</h2>
+        <h2 style={{...StyleHeading}}>{this.props.heading}</h2>
         <div style={{...StyleFrame}}>
           <div style={{...StyleList}}>
           {this.props.items !== undefined ?
@@ -609,7 +610,7 @@ class App extends Component {
         <div style={{...StyleSection,
           textAlign: 'center'
         }}>
-          <h1>Your Favourites</h1>
+          <h1 style={{...StyleHeading}}>Your Favourites</h1>
           <div style={{
             display: 'flex',
             flexDirection: 'row',
