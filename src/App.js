@@ -293,16 +293,20 @@ class CurrentlyPlaying extends Component {
             <div style={{
               textAlign: 'center',
               display: 'flex',
-              flexDirection: 'row',
-              alignContent: 'space-between',
-              justifyContent: 'space-around'
+              flexDirection: 'row'
             }}>
               {this.props.trackName ?
-                <p>{this.props.trackName}</p>
+                <p style={{
+                  flex: '1 0 50%'
+                }}>{this.props.trackName}</p>
                 :
-                <b>There doesn't seem to be anything playing</b>
+                <b style={{
+                  flex: '0 0 100%'
+                }}>There doesn't seem to be anything playing<br/>(You may be in a private session)</b>
               }
-              <p>{this.props.artistName}</p>
+              <p style={{
+                  flex: '1 0 50%'
+                }}>{this.props.artistName}</p>
             </div>
             <MediaControls/>
             </div>
@@ -459,11 +463,9 @@ class App extends Component {
         headers: {'Authorization': 'Bearer ' + accessToken}
       }).then((response) => {
         if (response.status == '204') {
-          console.log('nothing found')
           return null
         }
         else {
-          console.log('something is playing')
           return response.json()
         }
       })
@@ -475,7 +477,7 @@ class App extends Component {
               progress_ms: data.progress_ms,
               duration_ms: data.item.duration_ms,
               name: data.item.name,
-              spotifyLink: data.context.external_urls.spotify,
+              spotifyLink: data.item.external_urls.spotify,
               album: {
                 name: data.item.album.name,
                 spotifyLink: data.item.album.external_urls.spotify,
@@ -494,10 +496,6 @@ class App extends Component {
             }
           })
         }
-        else {
-          console.log('nothing playing')
-        }
-        console.log(this.state)
       })
     }
   }
@@ -517,17 +515,24 @@ class App extends Component {
             paddingBottom: '.5vw',
             alignItems: 'center'
         }}>
-          <img style= {{
-          borderRadius: '.2em',
-          width: '2em',
-          marginRight: '1em'
-          }}
-            src={this.state.user ?
-              'favicon.ico'
-              :
-              'favicon.ico'
-            }
-          />
+          {
+            (this.state.user && this.state.user.profileLink) ?
+            <img style= {{
+              borderRadius: '.2em',
+              width: '3vw',
+              marginRight: '1em'
+              }}
+                src={'favicon.ico'}
+            />
+            :
+            <img style= {{
+              borderRadius: '.2em',
+              width: '3vw',
+              marginRight: '1em'
+              }}
+                src='favicon.ico'
+            />
+          }
           <figcaption>
             <a style={{
               color: 'inherit',
@@ -549,7 +554,8 @@ class App extends Component {
             <div style={{
               paddingRight: '2vw',
               borderRight: sectionSeparator,
-              width: '48%'
+              width: '48%',
+              minWidth: '250px'
             }}>
               <CurrentlyPlaying 
                 trackName={
