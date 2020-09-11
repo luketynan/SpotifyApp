@@ -446,7 +446,6 @@ class App extends Component {
   componentDidMount() {
     let accessToken = queryString.parse(window.location.search).access_token;    
     if (accessToken !== undefined) {
-
       fetch('https://api.spotify.com/v1/me', {
         headers: {'Authorization': 'Bearer ' + accessToken}
       }).then((response) => response.json())
@@ -497,6 +496,27 @@ class App extends Component {
             }
           })
         }
+      })
+
+      fetch('	https://api.spotify.com/v1/me/player/recently-played', {
+        headers: {'Authorization': 'Bearer ' + accessToken}
+      }).then((response) => response.json())
+      .then((data) => {
+        if (data !== null) {
+          let recentItems = []
+          for (let i=0 ; i < data.items.length ; i++) {
+            recentItems.push({
+              name: data.items[i].track.name
+            })
+          }
+          this.setState({
+            recent: {
+              items: recentItems
+            }
+          })
+        }
+        console.log(this.state)
+        console.log(data)
       })
     }
   }
@@ -550,7 +570,8 @@ class App extends Component {
         <div style={{...StyleSection}}>
           <div style={{...StyleFrame,
             display: 'flex',
-            flexDirection: 'row'
+            flexDirection: 'row',
+            height: '20vw'
           }}>
             <div style={{
               paddingRight: '2vw',
@@ -597,11 +618,11 @@ class App extends Component {
               position: 'relative'
             }}>
               <RecentlyPlayed 
-                // items={
-                //   this.state.recent 
-                //   && 
-                //   this.state.recent.items
-                // }
+                items={
+                  this.state.recent 
+                  && 
+                  this.state.recent.items
+                }
               />
             </div>
           </div>
