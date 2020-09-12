@@ -18,3 +18,12 @@ h1 {
 h2 {
   font-size: 16px;
 }
+
+.customScrollBar::-webkit-scrollbar {
+  background-color: inherit;
+}
+
+.customScrollBar::-webkit-scrollbar-thumb {
+  background: #818181;
+  border-radius: 4px;
+}

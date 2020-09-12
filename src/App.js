@@ -309,7 +309,12 @@ class CurrentlyPlaying extends Component {
                   flex: '1 0 50%'
                 }}>{this.props.artistName}</p>
             </div>
-            <MediaControls/>
+            <div style={{
+              width: '80%',
+              margin: 'auto'
+            }}>
+              <MediaControls/> 
+            </div>
           </div>
         </div>
         <div style={{textAlign: 'center'}}>
@@ -404,7 +409,10 @@ class RecentlyPlayed extends Component {
         textAlign: 'center'
       }}>
         <h2 style={{...StyleHeading}}>Recently Played</h2>
-        <div style={{...StyleList, overflow: 'auto'}}>
+        <div style={{...StyleList, 
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }} className='customScrollBar'>
           {this.props.items !== undefined ?
             populateList(this.props.items)
             :
@@ -498,7 +506,7 @@ class App extends Component {
         }
       })
 
-      fetch('	https://api.spotify.com/v1/me/player/recently-played', {
+      fetch('https://api.spotify.com/v1/me/player/recently-played', {
         headers: {'Authorization': 'Bearer ' + accessToken}
       }).then((response) => response.json())
       .then((data) => {
@@ -515,8 +523,44 @@ class App extends Component {
             }
           })
         }
-        console.log(this.state)
-        console.log(data)
+      })
+      
+      fetch('https://api.spotify.com/v1/me/top/artists', {
+        headers: {'Authorization': 'Bearer ' + accessToken}
+      }).then((response) => response.json())
+      .then((data) => {
+        if (data !== null) {
+          let favouriteItems = []
+          for (let i=0 ; i < data.items.length ; i++) {
+            favouriteItems.push({
+              name: data.items[i].name
+            })
+          }
+          this.setState({
+            favouriteArtists: {
+              items: favouriteItems
+            }
+          })
+        }
+      })
+      
+      fetch('https://api.spotify.com/v1/me/top/tracks', {
+        headers: {'Authorization': 'Bearer ' + accessToken}
+      }).then((response) => response.json())
+      .then((data) => {
+        if (data !== null) {
+          let favouriteItems = []
+          for (let i=0 ; i < data.items.length ; i++) {
+            favouriteItems.push({
+              name: data.items[i].name
+            })
+          }
+          this.setState({
+            favouriteTracks: {
+              items: favouriteItems
+            }
+          })
+        }
       })
     }
   }
@@ -640,19 +684,19 @@ class App extends Component {
           }}>
             <FavouriteSection 
               heading='Artists' 
-              // items={
-              //   this.state.favourites
-              //   &&
-              //   this.state.favourites.artists
-              // }
+              items={
+                this.state.favouriteArtists
+                &&
+                this.state.favouriteArtists.items
+              }
             />
             <FavouriteSection 
               heading='Tracks' 
-              // items={
-              //   this.state.favourites
-              //   &&
-              //   this.state.favourites.tracks
-              // }
+              items={
+                this.state.favouriteTracks
+                &&
+                this.state.favouriteTracks.items
+              }
             />
           </div>
         </div>
