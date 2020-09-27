@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import queryString from 'query-string';
+import { recomposeColor } from '@material-ui/core';
 
 let accentColor = '#818181';
 let frameBackgroundColor = '#C4C4C4';
@@ -68,6 +69,40 @@ let populateList = (data) => {
   }
   return items
 }
+
+let startPlayback = () => {
+  let accessToken = queryString.parse(window.location.search).access_token;
+  fetch("https://api.spotify.com/v1/me/player/play", {
+    method: 'PUT',
+    headers: {
+     'Content-Type': 'application/json',
+     'Authorization': `Bearer ` + accessToken
+    }}).then((response) => {
+      if (response.status == '204') {
+        return true
+      }
+      else {
+        return null
+      }
+    })
+};
+
+let stopPlayback = () => {
+  let accessToken = queryString.parse(window.location.search).access_token;
+  fetch("https://api.spotify.com/v1/me/player/pause", {
+    method: 'PUT',
+    headers: {
+     'Content-Type': 'application/json',
+     'Authorization': `Bearer ` + accessToken
+    }}).then((response) => {
+      if (response.status == '204') {
+        return true
+      }
+      else {
+        return null
+      }
+    })
+};
 
 
 class LoadingPlaceHolder extends Component {
@@ -201,10 +236,12 @@ class MediaControls extends Component {
           <path d="m31.301 147.85 144.65-108.64v217.28z"/>
         </g>
         </svg>
+
         <svg 
         onClick={() => {
-          this.setState({playing: !this.state.playing})
-          console.log('Playing: ' + this.state.playing);
+          this.setState({playing: true})
+          console.log('Playback resumed')
+          startPlayback()
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 197.26 285.7" xmlns="http://www.w3.org/2000/svg">
@@ -212,6 +249,19 @@ class MediaControls extends Component {
           <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
         </g>
         </svg>
+
+        <svg 
+        onClick={() => {
+          this.setState({playing: false})
+          console.log('Playback paused')
+          stopPlayback()
+        }}
+        style={{...StyleMediaButton}}
+        version="1.1" viewBox="0 0 197.57 285.75" xmlns="http://www.w3.org/2000/svg">
+          <rect x="17.5" y="17.5" width="52.77" height="250.75" ry="22.492" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+          <rect x="127.3" y="17.5" width="52.77" height="250.75" ry="22.492" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+        </svg>
+
         <svg 
         onClick={() => {
           console.log('Skip');
@@ -223,6 +273,7 @@ class MediaControls extends Component {
             <path transform="matrix(.56563 0 0 .73579 203.52 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
           </g>
         </svg>
+        
         <svg 
         onClick={() => {
           this.setState({shuffle: !this.state.shuffle})
