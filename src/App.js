@@ -253,7 +253,7 @@ class LoginScreen extends Component {
           <h1 style={{textAlign:'center', fontSize:'150%'}}>First,</h1>
           <h2>please log in</h2>
 
-          <button onClick={() => {window.location='http://localhost:8888/login'}}
+          <button onClick={() => {window.location='https://myspotifyappbackend.herokuapp.com/login'}}
           style={{
             color: 'inherit',
             textDecoration: 'none',
