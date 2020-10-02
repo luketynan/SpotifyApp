@@ -3,6 +3,8 @@ import './App.css';
 import queryString from 'query-string';
 import { recomposeColor } from '@material-ui/core';
 
+let accessToken = queryString.parse(window.location.search).access_token
+
 let accentColor = '#818181';
 let frameBackgroundColor = '#C4C4C4';
 let borderCurve = '2vw';
@@ -70,49 +72,157 @@ let populateList = (data) => {
   return items
 }
 
-let startPlayback = () => {
-  let accessToken = queryString.parse(window.location.search).access_token;
+let toggleRepeat = (parent) => {    
+  let newMode = ''
+  switch(parent.state.repeat) {
+    case 'off':
+      newMode = 'context'
+      break;
+    case 'context':
+      newMode = 'track'
+      break;
+    case 'track':
+      newMode = 'off'
+      break;
+  }
+  if (newMode !== '') {
+    parent.setState({repeat: newMode})
+    fetch("https://api.spotify.com/v1/me/player/repeat?state=" + newMode, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ` + accessToken
+      }
+    })
+  }
+  else {
+    alert('Something went wrong')
+  }
+}
+
+let toggleShuffle = (parent) => {
+  fetch("https://api.spotify.com/v1/me/player/shuffle?state=" + !parent.state.shuffle, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ` + accessToken
+    }
+  })
+  parent.setState({shuffle: !parent.state.shuffle})
+}
+
+let startPlayback = (parent) => {
   fetch("https://api.spotify.com/v1/me/player/play", {
     method: 'PUT',
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ` + accessToken
-    }}).then((response) => {
-      if (response.status == '204') {
-        return true
-      }
-      else {
-        return null
-      }
-    })
-};
+    }
+  })
+  .then((response) => {
+    if (response.status == '204') {
+      console.log('Playback resumed successfully')
+      parent !== undefined && parent.setState({playing: true})
+    }
+    else if (response.status == '404') {
+      console.log('Device not found')
+      alert('There\'s no available devices for playback')
+    }
+    else if (response.status == '403') {
+      console.log('No premium access')
+      alert('This user doesn\'t have premium access or there is already something playing')
+    }
+    else {
+      console.log('Unexpected error occured')
+      alert('There was an unexpected error :(')
+    }
+  })
+}
 
-let stopPlayback = () => {
-  let accessToken = queryString.parse(window.location.search).access_token;
+let stopPlayback = (parent) => {
   fetch("https://api.spotify.com/v1/me/player/pause", {
     method: 'PUT',
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ` + accessToken
-    }}).then((response) => {
+  }})
+    .then((response) => {
       if (response.status == '204') {
-        return true
+        console.log('Playback paused successfully')
+        parent !== undefined && parent.setState({playing: false})
+      }
+      else if (response.status == '404') {
+        console.log('Device not found')
+        alert('There\'s currently no active playback')
+      }
+      else if (response.status == '403') {
+        console.log('No premium access')
+        alert('This accountdoesn\'t have premium access or there isn\'t anything playing')
       }
       else {
-        return null
+        console.log('Unexpected error occured')
       }
     })
-};
+}
 
+let nextTrack = () => {
+  fetch("https://api.spotify.com/v1/me/player/next", {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json',
+     'Authorization': `Bearer ` + accessToken
+  }})
+}
 
-class LoadingPlaceHolder extends Component {
+let previousTrack = () => {
+  fetch("https://api.spotify.com/v1/me/player/previous", {
+    method: 'POST',
+    headers: {
+     'Content-Type': 'application/json',
+     'Authorization': `Bearer ` + accessToken
+  }})
+}
+
+class LoadingCircle extends Component {
+  render() {
+    return (
+      <svg className='Spinning'
+      style={{
+        width: '3vw',
+        height: '3vw',
+        animation: 'Spin 1.25s infinite linear'
+      }}
+      version="1.1" viewBox="0 0 5.2917 5.2917" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(1.3891e-5)" fill={accentColor}>
+        <path d="m1.3229 2.6458a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".6"/>
+        <path d="m3.3073 0.66146a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.004537z" opacity=".8"/>
+        <path d="m1.9182 1.2568a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".7"/>
+        <g>
+          <path d="m1.9844 3.9688a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".5"/>
+          <path d="m3.3073 4.6302a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".4"/>
+          <path d="m4.6302 3.9159a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".2"/>
+          <path d="m5.2917 2.6458a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".1"/>
+          <path d="m4.6302 1.2568a0.66146 0.66146 0 0 1-0.66032 0.66146 0.66146 0.66146 0 0 1-0.66259-0.65919 0.66146 0.66146 0 0 1 0.65805-0.66372 0.66146 0.66146 0 0 1 0.66485 0.65691l-0.66144 0.00454z" opacity=".7"/>
+        </g>
+      </g>
+      </svg>
+    )
+  }
+}
+
+class LoadingPlaceholder extends Component {
   render() {
     return (
       <div style={{
         textAlign: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center'
       }}>
-        Loading...
+        <p style={{marginRight: '1vw'}}>Loading</p>
+        <LoadingCircle/>
       </div>
     )
   }
@@ -195,25 +305,12 @@ class AlbumFrame extends Component {
   }
 }
 
-class MediaControls extends Component {
-  constructor() {
-    super();
-    this.state = {
-      playing: false,
-      repeat: false,
-      shuffle: false
-    }
-  }
+class RepeatButton extends Component {
   render() {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between'
-      }}>
-        <svg 
+      <svg 
         onClick={() => {
-          this.setState({repeat: !this.state.repeat})
-          console.log('Repeat: ' + this.state.repeat);
+          toggleRepeat(this.props.parent)
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 342.24 247.83" xmlns="http://www.w3.org/2000/svg">
@@ -223,11 +320,17 @@ class MediaControls extends Component {
           <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none" strokeWidth="35"/>
           <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
         </g>
-        </svg>
+      </svg>
+    )
+  }
+}
 
-        <svg 
+class BackButton extends Component {
+  render() {
+    return (
+      <svg 
         onClick={() => {
-          console.log('Back');
+          previousTrack()
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 391.01 277.27" xmlns="http://www.w3.org/2000/svg">
@@ -235,36 +338,50 @@ class MediaControls extends Component {
           <path d="m217.66 147.85 144.65-108.64v217.28z"/>
           <path d="m31.301 147.85 144.65-108.64v217.28z"/>
         </g>
-        </svg>
+      </svg>
+    )
+  }
+}
 
-        <svg 
+class PlayButton extends Component {
+  render() {
+    return ( 
+      <svg 
         onClick={() => {
-          this.setState({playing: true})
-          console.log('Playback resumed')
-          startPlayback()
+          startPlayback(this.props.parent)
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 197.26 285.7" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(-5 -5)">
           <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="93.005"/>
         </g>
-        </svg>
+      </svg>
+    )
+  }
+}
 
-        <svg 
+class PauseButton extends Component {
+  render() {
+    return (
+      <svg 
         onClick={() => {
-          this.setState({playing: false})
-          console.log('Playback paused')
-          stopPlayback()
+          stopPlayback(this.props.parent)
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 197.57 285.75" xmlns="http://www.w3.org/2000/svg">
           <rect x="17.5" y="17.5" width="52.77" height="250.75" ry="22.492" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
           <rect x="127.3" y="17.5" width="52.77" height="250.75" ry="22.492" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
-        </svg>
+      </svg>
+    )
+  }
+}
 
-        <svg 
+class SkipForwardButton extends Component {
+  render() {
+    return (
+      <svg 
         onClick={() => {
-          console.log('Skip');
+          nextTrack()
         }}
         style={{...StyleMediaButton}} 
         version="1.1" viewBox="0 0 383.61 285.7" xmlns="http://www.w3.org/2000/svg">
@@ -272,12 +389,17 @@ class MediaControls extends Component {
             <path transform="matrix(.56563 0 0 .73579 17.163 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
             <path transform="matrix(.56563 0 0 .73579 203.52 20.82)" d="m280.74 172.65-255.74 147.65v-295.3z"/>
           </g>
-        </svg>
-        
-        <svg 
+      </svg>
+    )
+  }
+}
+
+class ShuffleButton extends Component {
+  render() {
+    return (
+      <svg 
         onClick={() => {
-          this.setState({shuffle: !this.state.shuffle})
-          console.log('Shuffle: ' + this.state.shuffle);
+          toggleShuffle(this.props.parent)
         }}
         style={{...StyleMediaButton}} 
         version="1.1" viewBox="0 0 418.72 289.09" xmlns="http://www.w3.org/2000/svg">
@@ -287,7 +409,52 @@ class MediaControls extends Component {
           <path d="m330.89 60.491c-214.43 0.80945-148.03 184.26-329.33 175.53" fill="none" strokeWidth="35"/>
           <path transform="matrix(1.8522 0 0 2.1858 .81152 -.033965)" d="m217.32 27.878-30.966 17.878v-35.757z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
         </g>
-        </svg>
+      </svg>
+    )
+  }
+}
+
+class MediaControls extends Component {
+  constructor() {
+    super();
+    this.state = {
+    } 
+  }
+
+  componentDidMount() {   
+    fetch('https://api.spotify.com/v1/me/player', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
+    })
+    .then((response) => {
+      if (response.status == '200') {
+        return response.json()
+      }
+      else {
+        return null
+      }
+    })
+    .then((data) => {
+      if (data !== null && data !== undefined) {
+        this.setState({
+          playing: data.is_playing,
+          shuffle: data.shuffle_state,
+          repeat: data.repeat_state
+        })
+      }
+    })
+  }
+  
+  render() {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}>
+        <ShuffleButton parent={this}/>
+        <BackButton/>
+        {this.state.playing ? <PauseButton parent={this}/> : <PlayButton parent={this}/>}
+        <SkipForwardButton/>
+        <RepeatButton parent={this}/>
       </div>
     )
   }
@@ -466,7 +633,7 @@ class RecentlyPlayed extends Component {
           {this.props.items !== undefined ?
             populateList(this.props.items)
             :
-            <LoadingPlaceHolder/>
+            <LoadingPlaceholder/>
           }
         </div>
       </div>
@@ -484,7 +651,7 @@ class FavouriteSection extends Component {
           {this.props.items !== undefined ?
             populateList(this.props.items)
             :
-            <LoadingPlaceHolder/>
+            <LoadingPlaceholder/>
           }
           </div>
         </div>
@@ -502,11 +669,11 @@ class App extends Component {
   
 
   componentDidMount() {
-    let accessToken = queryString.parse(window.location.search).access_token;    
     if (accessToken !== undefined) {
       fetch('https://api.spotify.com/v1/me', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status == '200') {
           return response.json()
         }
@@ -528,7 +695,8 @@ class App extends Component {
       
       fetch('https://api.spotify.com/v1/me/player/currently-playing', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status == '200') {
           return response.json()
         }
@@ -567,7 +735,8 @@ class App extends Component {
 
       fetch('https://api.spotify.com/v1/me/player/recently-played', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status == '200') {
           return response.json()
         }
@@ -593,7 +762,8 @@ class App extends Component {
       
       fetch('https://api.spotify.com/v1/me/top/artists', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status == '200') {
           return response.json()
         }
@@ -619,7 +789,8 @@ class App extends Component {
       
       fetch('https://api.spotify.com/v1/me/top/tracks', {
         headers: {'Authorization': 'Bearer ' + accessToken}
-      }).then((response) => {
+      })
+      .then((response) => {
         if (response.status == '200') {
           return response.json()
         }
