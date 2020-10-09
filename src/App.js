@@ -183,6 +183,90 @@ let previousTrack = () => {
   }})
 }
 
+function fetchPlayerState(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me/player', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
+function fetchUserProfile(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
+function fetchCurrentlyPlaying(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me/player/currently-playing', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
+function fetchRecentlyPlayed(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me/player/recently-played', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
+function fetchTopArtists(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me/top/artists', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
+function fetchTopTracks(onSuccess, onFail) {
+  return fetch('https://api.spotify.com/v1/me/top/tracks', {
+    headers: {'Authorization': 'Bearer ' + accessToken}
+  })
+  .then((response) => {
+    if (response.status == '200') {
+      return response.json()
+    }
+    else {
+      return null
+    }
+  })
+}
+
 class LoadingCircle extends Component {
   render() {
     return (
@@ -422,17 +506,7 @@ class MediaControls extends Component {
   }
 
   componentDidMount() {   
-    fetch('https://api.spotify.com/v1/me/player', {
-      headers: {'Authorization': 'Bearer ' + accessToken}
-    })
-    .then((response) => {
-      if (response.status == '200') {
-        return response.json()
-      }
-      else {
-        return null
-      }
-    })
+    fetchPlayerState()
     .then((data) => {
       if (data !== null && data !== undefined) {
         this.setState({
@@ -670,17 +744,7 @@ class App extends Component {
 
   componentDidMount() {
     if (accessToken !== undefined) {
-      fetch('https://api.spotify.com/v1/me', {
-        headers: {'Authorization': 'Bearer ' + accessToken}
-      })
-      .then((response) => {
-        if (response.status == '200') {
-          return response.json()
-        }
-        else {
-          return null
-        }
-      })
+      fetchUserProfile()
       .then((data) => {
         if (data !== null) {
           this.setState({
@@ -693,17 +757,7 @@ class App extends Component {
         }
       })
       
-      fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-        headers: {'Authorization': 'Bearer ' + accessToken}
-      })
-      .then((response) => {
-        if (response.status == '200') {
-          return response.json()
-        }
-        else {
-          return null
-        }
-      })
+      fetchCurrentlyPlaying()
       .then((data) => {
         if (data !== null) {
           this.setState({
@@ -733,17 +787,7 @@ class App extends Component {
         }
       })
 
-      fetch('https://api.spotify.com/v1/me/player/recently-played', {
-        headers: {'Authorization': 'Bearer ' + accessToken}
-      })
-      .then((response) => {
-        if (response.status == '200') {
-          return response.json()
-        }
-        else {
-          return null
-        }
-      })
+      fetchRecentlyPlayed()
       .then((data) => {
         if (data !== null) {
           let recentItems = []
@@ -760,17 +804,7 @@ class App extends Component {
         }
       })
       
-      fetch('https://api.spotify.com/v1/me/top/artists', {
-        headers: {'Authorization': 'Bearer ' + accessToken}
-      })
-      .then((response) => {
-        if (response.status == '200') {
-          return response.json()
-        }
-        else {
-          return null
-        }
-      })
+      fetchTopArtists()
       .then((data) => {
         if (data !== null) {
           let favouriteItems = []
@@ -787,17 +821,7 @@ class App extends Component {
         }
       })
       
-      fetch('https://api.spotify.com/v1/me/top/tracks', {
-        headers: {'Authorization': 'Bearer ' + accessToken}
-      })
-      .then((response) => {
-        if (response.status == '200') {
-          return response.json()
-        }
-        else {
-          return null
-        }
-      })
+      fetchTopTracks()
       .then((data) => {
         if (data !== null) {
           let favouriteItems = []
