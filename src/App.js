@@ -604,15 +604,21 @@ class CurrentlyPlaying extends Component {
   }
   render() {
     return (
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between'
+    }}>
+      <h2 style={{...StyleHeading}}>
+        Currently Playing
+      </h2>
       <div style={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-evenly'
       }}>
-        <h2 style={{...StyleHeading}}>
-          Currently Playing
-        </h2>
 
         <div style={{
           display: 'flex',
@@ -660,6 +666,7 @@ class CurrentlyPlaying extends Component {
           <ProgressBar/>
         </div>
       </div>
+    </div>
     )
   }
 }
@@ -973,7 +980,7 @@ class App extends Component {
                 this.updateCurrentlyPlaying()
               }}
               style={{...StyleNormalButton,
-                position:'absolute',
+                position: 'absolute',
                 color: 'white'
               }}>
                 Refresh
