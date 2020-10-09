@@ -755,6 +755,7 @@ class App extends Component {
             }
           })
         }
+        document.title = data.display_name + ' - Spotify Stats'
       })
       
       fetchCurrentlyPlaying()
