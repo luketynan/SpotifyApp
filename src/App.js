@@ -38,24 +38,35 @@ let StyleList = {
   paddingBottom: '.5vw'
 }
 let StyleButton = {
-  backgroundColor: frameBackgroundColor,
+  cursor: 'pointer',
   border: 'none',
+  borderRadius: '20px'
+}
+let StyleNormalButton = {...StyleButton,
+  backgroundColor: accentColor,
+  padding: '.75vw'
+}
+let StyleSVGButton = {...StyleButton,
+  backgroundColor: frameBackgroundColor,
   width: '2vw',
   height: '2vw',
   fill: accentColor,
-  stroke: accentColor,
-  cursor: 'pointer'
+  stroke: accentColor
 }
-let StyleMediaButton = {...StyleButton,
+let StyleMediaButton = {...StyleSVGButton,
   width: '2vw',
   height: '2vw',
   fill: accentColor,
   stroke: accentColor,
   padding: '.5vw'
 }
-let StyleDropDownButton = {...StyleButton,
+let StyleDropDownButton = {...StyleSVGButton,
   width: '1.5vw',
   height: '1.5vw'
+}
+
+function goToLogin() {
+  window.location='http://localhost:8888/login'
 }
 
 let populateList = (data) => {
@@ -72,7 +83,7 @@ let populateList = (data) => {
   return items
 }
 
-let toggleRepeat = (parent) => {    
+let toggleRepeat = (parent) => {
   let newMode = ''
   switch(parent.state.repeat) {
     case 'off':
@@ -94,6 +105,8 @@ let toggleRepeat = (parent) => {
         'Authorization': `Bearer ` + accessToken
       }
     })
+    parent.updatePlayerState()
+    
   }
   else {
     alert('Something went wrong')
@@ -109,6 +122,7 @@ let toggleShuffle = (parent) => {
     }
   })
   parent.setState({shuffle: !parent.state.shuffle})
+  parent.updatePlayerState()
 }
 
 let startPlayback = (parent) => {
@@ -123,6 +137,7 @@ let startPlayback = (parent) => {
     if (response.status == '204') {
       console.log('Playback resumed successfully')
       parent !== undefined && parent.setState({playing: true})
+      parent.updatePlayerState()
     }
     else if (response.status == '404') {
       console.log('Device not found')
@@ -150,6 +165,7 @@ let stopPlayback = (parent) => {
       if (response.status == '204') {
         console.log('Playback paused successfully')
         parent !== undefined && parent.setState({playing: false})
+        parent.updatePlayerState()
       }
       else if (response.status == '404') {
         console.log('Device not found')
@@ -165,22 +181,32 @@ let stopPlayback = (parent) => {
     })
 }
 
-let nextTrack = () => {
+let nextTrack = (parent) => {
   fetch("https://api.spotify.com/v1/me/player/next", {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ` + accessToken
   }})
+  .then((response) => {
+    if(response.status == '204') {
+      parent.updatePlayerState()
+    }
+  })
 }
 
-let previousTrack = () => {
+let previousTrack = (parent) => {
   fetch("https://api.spotify.com/v1/me/player/previous", {
     method: 'POST',
     headers: {
      'Content-Type': 'application/json',
      'Authorization': `Bearer ` + accessToken
   }})
+  .then((response) => {
+    if(response.status == '204') {
+      parent.updatePlayerState()
+    }
+  })
 }
 
 function fetchPlayerState(onSuccess, onFail) {
@@ -312,6 +338,27 @@ class LoadingPlaceholder extends Component {
   }
 }
 
+class LoginButton extends Component {
+  render() {
+    return (
+      <button onClick={() => {goToLogin()}}
+        style={{
+          color: 'white',
+          textDecoration: 'none',
+          textAlign: 'center',
+          backgroundColor: '#1db954',
+          border: 'none',
+          borderRadius: '1vw',
+          padding: '1vw',
+          fontWeight: 'bold',
+        }}
+        >
+          {this.props.label}
+      </button>
+    )
+  }
+}
+
 class LoginScreen extends Component {
   render() {
     return (
@@ -334,24 +381,20 @@ class LoginScreen extends Component {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <h1 style={{textAlign:'center', fontSize:'150%'}}>First,</h1>
-          <h2>please log in</h2>
-
-          <button onClick={() => {window.location='http://localhost:8888/login'}}
-          style={{
-            color: 'inherit',
-            textDecoration: 'none',
-            textAlign: 'center',
-            backgroundColor: '#1db954',
-            border: 'none',
-            borderRadius: '1vw',
-            padding: '1vw',
-            marginTop: '5%',
-            fontWeight: 'bold',
-          }}
-          >
-            Log in to Spotify
-          </button>
+          <h1 style={{
+            textAlign:'center',
+            fontSize:'150%'
+          }}>
+            First,
+            <span style={{
+              display:'block',
+              marginBottom:'2.5vw',
+              fontSize:'70%'
+              }}>
+                please log in</span>
+          </h1>
+          
+          <LoginButton label='Log in to Spotify'/>
         </div>
       </div>
     )
@@ -414,7 +457,7 @@ class BackButton extends Component {
     return (
       <svg 
         onClick={() => {
-          previousTrack()
+          previousTrack(this.props.parent)
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 391.01 277.27" xmlns="http://www.w3.org/2000/svg">
@@ -465,7 +508,7 @@ class SkipForwardButton extends Component {
     return (
       <svg 
         onClick={() => {
-          nextTrack()
+          nextTrack(this.props.parent)
         }}
         style={{...StyleMediaButton}} 
         version="1.1" viewBox="0 0 383.61 285.7" xmlns="http://www.w3.org/2000/svg">
@@ -505,7 +548,7 @@ class MediaControls extends Component {
     } 
   }
 
-  componentDidMount() {   
+  updatePlayerState() {
     fetchPlayerState()
     .then((data) => {
       if (data !== null && data !== undefined) {
@@ -517,6 +560,10 @@ class MediaControls extends Component {
       }
     })
   }
+
+  componentDidMount() {   
+    this.updatePlayerState()
+  }
   
   render() {
     return (
@@ -525,9 +572,9 @@ class MediaControls extends Component {
         justifyContent: 'space-between'
       }}>
         <ShuffleButton parent={this}/>
-        <BackButton/>
+        <BackButton parent={this}/>
         {this.state.playing ? <PauseButton parent={this}/> : <PlayButton parent={this}/>}
-        <SkipForwardButton/>
+        <SkipForwardButton parent={this}/>
         <RepeatButton parent={this}/>
       </div>
     )
@@ -740,104 +787,119 @@ class App extends Component {
     this.state = {
     }
   }
-  
+
+  updateProfile() {
+    fetchUserProfile()
+    .then((data) => {
+      if (data !== null) {
+        this.setState({
+          user: {
+            name: data.display_name,
+            profileLink: data.external_urls.spotify,
+            images: data.images
+          }
+        })
+      }
+      document.title = data.display_name + ' - Spotify Stats'
+    })
+  }
+
+  updateCurrentlyPlaying() {
+    fetchCurrentlyPlaying()
+    .then((data) => {
+      if (data !== null) {
+        this.setState({
+          current: {
+            is_playing: data.is_playing,
+            progress_ms: data.progress_ms,
+            duration_ms: data.item.duration_ms,
+            name: data.item.name,
+            spotifyLink: data.item.external_urls.spotify,
+            album: {
+              name: data.item.album.name,
+              spotifyLink: data.item.album.external_urls.spotify,
+              images: [
+                {
+                  url: data.item.album.images[2].url
+                },
+              ]
+            },
+            artists: [
+              {
+                name: data.item.artists[0].name,
+                spotifyLink: data.item.artists[0].external_urls.spotify
+              }
+            ]
+          }
+        })
+      }
+    })
+  }
+
+  updateRecentlyPlayed() {
+    fetchRecentlyPlayed()
+    .then((data) => {
+      if (data !== null) {
+        let recentItems = []
+        for (let i=0 ; i < data.items.length ; i++) {
+          recentItems.push({
+            name: data.items[i].track.name
+          })
+        }
+        this.setState({
+          recent: {
+            items: recentItems
+          }
+        })
+      }
+    })
+  }
+
+  updateTopArtists() {
+    fetchTopArtists()
+    .then((data) => {
+      if (data !== null) {
+        let favouriteItems = []
+        for (let i=0 ; i < data.items.length ; i++) {
+          favouriteItems.push({
+            name: data.items[i].name
+          })
+        }
+        this.setState({
+          favouriteArtists: {
+            items: favouriteItems
+          }
+        })
+      }
+    })
+  }
+
+  updateTopTracks() {
+    fetchTopTracks()
+    .then((data) => {
+      if (data !== null) {
+        let favouriteItems = []
+        for (let i=0 ; i < data.items.length ; i++) {
+          favouriteItems.push({
+            name: data.items[i].name
+          })
+        }
+        this.setState({
+          favouriteTracks: {
+            items: favouriteItems
+          }
+        })
+      }
+    })
+  }
 
   componentDidMount() {
     if (accessToken !== undefined) {
-      fetchUserProfile()
-      .then((data) => {
-        if (data !== null) {
-          this.setState({
-            user: {
-              name: data.display_name,
-              profileLink: data.external_urls.spotify,
-              images: data.images
-            }
-          })
-        }
-        document.title = data.display_name + ' - Spotify Stats'
-      })
-      
-      fetchCurrentlyPlaying()
-      .then((data) => {
-        if (data !== null) {
-          this.setState({
-            current: {
-              is_playing: data.is_playing,
-              progress_ms: data.progress_ms,
-              duration_ms: data.item.duration_ms,
-              name: data.item.name,
-              spotifyLink: data.item.external_urls.spotify,
-              album: {
-                name: data.item.album.name,
-                spotifyLink: data.item.album.external_urls.spotify,
-                images: [
-                  {
-                    url: data.item.album.images[2].url
-                  },
-                ]
-              },
-              artists: [
-                {
-                  name: data.item.artists[0].name,
-                  spotifyLink: data.item.artists[0].external_urls.spotify
-                }
-              ]
-            }
-          })
-        }
-      })
-
-      fetchRecentlyPlayed()
-      .then((data) => {
-        if (data !== null) {
-          let recentItems = []
-          for (let i=0 ; i < data.items.length ; i++) {
-            recentItems.push({
-              name: data.items[i].track.name
-            })
-          }
-          this.setState({
-            recent: {
-              items: recentItems
-            }
-          })
-        }
-      })
-      
-      fetchTopArtists()
-      .then((data) => {
-        if (data !== null) {
-          let favouriteItems = []
-          for (let i=0 ; i < data.items.length ; i++) {
-            favouriteItems.push({
-              name: data.items[i].name
-            })
-          }
-          this.setState({
-            favouriteArtists: {
-              items: favouriteItems
-            }
-          })
-        }
-      })
-      
-      fetchTopTracks()
-      .then((data) => {
-        if (data !== null) {
-          let favouriteItems = []
-          for (let i=0 ; i < data.items.length ; i++) {
-            favouriteItems.push({
-              name: data.items[i].name
-            })
-          }
-          this.setState({
-            favouriteTracks: {
-              items: favouriteItems
-            }
-          })
-        }
-      })
+      this.updateProfile()
+      this.updateCurrentlyPlaying()
+      this.updateRecentlyPlayed()
+      this.updateTopArtists()
+      this.updateTopTracks()
     }
   }
 
@@ -849,43 +911,51 @@ class App extends Component {
       <div className="App" style={{
         padding: outerSpacing
       }}>
-        <figure style={{
+        <div style={{
+            borderBottom: sectionSeparator,
             display: 'flex',
             flexDirection: 'row',
-            borderBottom: sectionSeparator,
-            paddingBottom: '.5vw',
+            justifyContent: 'space-between',
+            paddingBottom: '.75vw'
+        }}>
+          <figure style={{
+            display: 'flex',
+            flexDirection: 'row',
             alignItems: 'center'
         }}>
-          {
-            (this.state.user && this.state.user.profileLink) ?
-            <img style= {{
-              borderRadius: '.2em',
-              width: '3vw',
-              marginRight: '1em'
+            {
+              (this.state.user && this.state.user.profileLink) ?
+              <img style= {{
+                borderRadius: '.2em',
+                width: '3vw',
+                marginRight: '1em'
+                }}
+                  src={'favicon.ico'}
+              />
+              :
+              <img style= {{
+                borderRadius: '.2em',
+                width: '3vw',
+                marginRight: '1em'
+                }}
+                  src='favicon.ico'
+              />
+            }
+            <figcaption>
+              <a style={{
+                color: 'inherit',
+                textDecoration: 'none',
+                fontWeight: 'bold'
               }}
-                src={'favicon.ico'}
-            />
-            :
-            <img style= {{
-              borderRadius: '.2em',
-              width: '3vw',
-              marginRight: '1em'
-              }}
-                src='favicon.ico'
-            />
-          }
-          <figcaption>
-            <a style={{
-              color: 'inherit',
-              textDecoration: 'none',
-              fontWeight: 'bold'
-            }}
-            target='blank'
-            href={this.state.user ? this.state.user.profileLink : '#'}>
-              {this.state.user ? this.state.user.name : 'User name not found'}
-            </a>
-            </figcaption>
-        </figure>
+              target='blank'
+              href={this.state.user ? this.state.user.profileLink : '#'}>
+                {this.state.user ? this.state.user.name : 'User name not found'}
+              </a>
+              </figcaption>
+          </figure>
+
+          <LoginButton label='Refresh'/>
+        </div>
         
         <div style={{...StyleSection}}>
           <div style={{...StyleFrame,
@@ -899,6 +969,15 @@ class App extends Component {
               width: '48%',
               minWidth: '250px'
             }}>
+              <button onClick={() => {
+                this.updateCurrentlyPlaying()
+              }}
+              style={{...StyleNormalButton,
+                position:'absolute',
+                color: 'white'
+              }}>
+                Refresh
+              </button>
               <CurrentlyPlaying 
                 trackName={
                   this.state.current 
