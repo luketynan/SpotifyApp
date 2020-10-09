@@ -142,6 +142,7 @@ let startPlayback = (parent) => {
     else if (response.status == '403') {
       console.log('No premium access')
       alert('This user doesn\'t have premium access or there is already something playing')
+      parent.updatePlayerState()
     }
     else {
       console.log('Unexpected error occured')
@@ -169,6 +170,7 @@ let stopPlayback = (parent) => {
       else if (response.status == '403') {
         console.log('No premium access')
         alert('This accountdoesn\'t have premium access or there isn\'t anything playing')
+        parent.updatePlayerState()
       }
       else {
         console.log('Unexpected error occured')
