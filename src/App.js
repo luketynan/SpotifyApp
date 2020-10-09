@@ -105,8 +105,6 @@ let toggleRepeat = (parent) => {
         'Authorization': `Bearer ` + accessToken
       }
     })
-    parent.updatePlayerState()
-    
   }
   else {
     alert('Something went wrong')
@@ -122,7 +120,6 @@ let toggleShuffle = (parent) => {
     }
   })
   parent.setState({shuffle: !parent.state.shuffle})
-  parent.updatePlayerState()
 }
 
 let startPlayback = (parent) => {
@@ -137,7 +134,6 @@ let startPlayback = (parent) => {
     if (response.status == '204') {
       console.log('Playback resumed successfully')
       parent !== undefined && parent.setState({playing: true})
-      parent.updatePlayerState()
     }
     else if (response.status == '404') {
       console.log('Device not found')
@@ -165,7 +161,6 @@ let stopPlayback = (parent) => {
       if (response.status == '204') {
         console.log('Playback paused successfully')
         parent !== undefined && parent.setState({playing: false})
-        parent.updatePlayerState()
       }
       else if (response.status == '404') {
         console.log('Device not found')
@@ -190,7 +185,6 @@ let nextTrack = (parent) => {
   }})
   .then((response) => {
     if(response.status == '204') {
-      parent.updatePlayerState()
     }
   })
 }
@@ -204,7 +198,6 @@ let previousTrack = (parent) => {
   }})
   .then((response) => {
     if(response.status == '204') {
-      parent.updatePlayerState()
     }
   })
 }
@@ -424,8 +417,12 @@ class AlbumFrame extends Component {
           }}></div>
         }
         
-        <figcaption style={{
-          fontWeight: 'bold'
+        <figcaption className='customScrollBar'
+        style={{
+          fontWeight: 'bold',
+          height: '28px',
+          overflow: 'hidden',
+          overflowY: 'auto'
         }}>{this.props.name}</figcaption>
       </figure>
     )
@@ -458,6 +455,9 @@ class BackButton extends Component {
       <svg 
         onClick={() => {
           previousTrack(this.props.parent)
+          setTimeout(() => {
+            this.props.parent.updateCurrentlyPlaying()
+          }, 500)
         }}
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 391.01 277.27" xmlns="http://www.w3.org/2000/svg">
@@ -572,9 +572,9 @@ class MediaControls extends Component {
         justifyContent: 'space-between'
       }}>
         <ShuffleButton parent={this}/>
-        <BackButton parent={this}/>
+        <BackButton/>
         {this.state.playing ? <PauseButton parent={this}/> : <PlayButton parent={this}/>}
-        <SkipForwardButton parent={this}/>
+        <SkipForwardButton/>
         <RepeatButton parent={this}/>
       </div>
     )
@@ -617,7 +617,7 @@ class CurrentlyPlaying extends Component {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-around'
       }}>
 
         <div style={{
@@ -1020,8 +1020,8 @@ class App extends Component {
             </div>
             <div style={{
               paddingLeft: '2vw',
-              width: '48%',
-              position: 'relative'
+              position: 'relative',
+              width: '48%'
             }}>
               <RecentlyPlayed 
                 items={
