@@ -431,7 +431,7 @@ class AlbumFrame extends Component {
   }
 }
 
-class RepeatButton extends Component {
+class RepeatOff extends Component {
   render() {
     return (
       <svg 
@@ -442,11 +442,73 @@ class RepeatButton extends Component {
         version="1.1" viewBox="0 0 342.24 247.83" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(-35.585 -19.636)">
           <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none" strokeWidth="35"/>
-          <path d="m359.92 72.496-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+          <path d="m359.92 72.496-61.247 35.361v-70.722z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
           <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none" strokeWidth="35"/>
-          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
+          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="35"/>
         </g>
       </svg>
+    )
+  }
+}
+
+class RepeatContext extends Component {
+  render() {
+    return (
+      <svg  
+      onClick={() => {
+        toggleRepeat(this.props.parent)
+      }}
+      style={{...StyleMediaButton}}
+      version="1.1" viewBox="0 0 436.56 436.56" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(11.578 74.728)" stroke="#818181" stroke-width="35">
+          <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none"/>
+          <path d="m359.92 72.496-61.247 35.361v-70.722z" fill="#818181" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none"/>
+          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <circle cx="218.28" cy="218.28" r="211.67" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="13.229"/>
+      </svg>
+    )
+  }
+}
+
+class RepeatTrack extends Component {
+  render() {
+    return (
+      <svg 
+        onClick={() => {
+          toggleRepeat(this.props.parent)
+        }}
+        style={{...StyleMediaButton}}
+        version="1.1" viewBox="0 0 436.56 436.56" xmlns="http://www.w3.org/2000/svg">
+          <g stroke={accentColor}>
+            <g transform="translate(11.578 74.728)" stroke-width="35">
+              <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none"/>
+              <path d="m359.92 72.496-61.247 35.361v-70.722z" fill={accentColor} stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none"/>
+              <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill={accentColor} stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <circle cx="218.28" cy="218.28" r="211.67" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="13.229"/>
+            <circle cx="122.37" cy="122.37" r="79.375" fill={accentColor} stroke-linecap="round" stroke-linejoin="round" stroke-width="6.6146"/>
+          </g>
+          <text x="87.178261" y="160.97197" fill="#ffffff" stroke-width=".26458"><tspan x="87.178261" y="160.97197" fill="#ffffff" stroke-width=".26458">1</tspan></text>
+      </svg>
+    )
+  }
+}
+
+class RepeatButton extends Component {
+  render() {
+    console.log(this.props.parent.state.repeat)
+    return (
+      this.props.parent.state.repeat == 'off' &&
+      <RepeatOff/>
+      ||
+      this.props.parent.state.repeat == 'context' &&
+      <RepeatContext/>
+      ||
+      this.props.parent.state.repeat == 'track' &&
+      <RepeatTrack/>
     )
   }
 }
