@@ -374,26 +374,6 @@ class LoginScreen extends Component {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-<<<<<<< HEAD
-          <h1 style={{textAlign:'center', fontSize:'150%'}}>First,</h1>
-          <h2>please log in</h2>
-
-          <button onClick={() => {window.location='https://myspotifyappbackend.herokuapp.com/login'}}
-          style={{
-            color: 'inherit',
-            textDecoration: 'none',
-            textAlign: 'center',
-            backgroundColor: '#1db954',
-            border: 'none',
-            borderRadius: '1vw',
-            padding: '1vw',
-            marginTop: '5%',
-            fontWeight: 'bold',
-          }}
-          >
-            Log in to Spotify
-          </button>
-=======
           <h1 style={{
             textAlign:'center',
             fontSize:'150%'
@@ -408,7 +388,6 @@ class LoginScreen extends Component {
           </h1>
           
           <LoginButton label='Log in to Spotify'/>
->>>>>>> lukesbranch
         </div>
       </div>
     )
