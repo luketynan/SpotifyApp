@@ -460,13 +460,13 @@ class RepeatContext extends Component {
       }}
       style={{...StyleMediaButton}}
       version="1.1" viewBox="0 0 436.56 436.56" xmlns="http://www.w3.org/2000/svg">
-        <g transform="translate(11.578 74.728)" stroke="#818181" stroke-width="35">
+        <g transform="translate(11.578 74.728)" stroke={accentColor} strokeWidth="35">
           <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none"/>
-          <path d="m359.92 72.496-61.247 35.361v-70.722z" fill="#818181" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="m359.92 72.496-61.247 35.361v-70.722z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round"/>
           <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none"/>
-          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill="#818181" stroke-linecap="round" stroke-linejoin="round"/>
+          <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round"/>
         </g>
-        <circle cx="218.28" cy="218.28" r="211.67" fill="none" stroke="#818181" stroke-linecap="round" stroke-linejoin="round" stroke-width="13.229"/>
+        <circle cx="218.28" cy="218.28" r="211.67" fill="none" stroke={accentColor} strokeLinecap="round" strokeLinejoin="round" strokeWidth="13.229"/>
       </svg>
     )
   }
@@ -482,16 +482,16 @@ class RepeatTrack extends Component {
         style={{...StyleMediaButton}}
         version="1.1" viewBox="0 0 436.56 436.56" xmlns="http://www.w3.org/2000/svg">
           <g stroke={accentColor}>
-            <g transform="translate(11.578 74.728)" stroke-width="35">
+            <g transform="translate(11.578 74.728)" strokeWidth="35">
               <path d="m53.446 161.92c0-102.98-17.846-92.604 248.18-92.604" fill="none"/>
-              <path d="m359.92 72.496-61.247 35.361v-70.722z" fill={accentColor} stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="m359.92 72.496-61.247 35.361v-70.722z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round"/>
               <path d="m359.96 125.18c0 102.98 17.846 92.604-248.18 92.604" fill="none"/>
-              <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill={accentColor} stroke-linecap="round" stroke-linejoin="round"/>
+              <path transform="scale(-1)" d="m-53.486-214.61-61.247 35.361v-70.722z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round"/>
             </g>
-            <circle cx="218.28" cy="218.28" r="211.67" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="13.229"/>
-            <circle cx="122.37" cy="122.37" r="79.375" fill={accentColor} stroke-linecap="round" stroke-linejoin="round" stroke-width="6.6146"/>
+            <circle cx="218.28" cy="218.28" r="211.67" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="13.229"/>
+            <circle cx="122.37" cy="122.37" r="79.375" fill={accentColor} strokeLinecap="round" strokeLinejoin="round" strokeWidth="6.6146"/>
           </g>
-          <text x="87.178261" y="160.97197" fill="#ffffff" stroke-width=".26458"><tspan x="87.178261" y="160.97197" fill="#ffffff" stroke-width=".26458">1</tspan></text>
+          <text x="87.178261" y="160.97197" fill="#ffffff" strokeWidth=".26458"><tspan x="87.178261" y="160.97197" fill="#ffffff" strokeWidth=".26458">1</tspan></text>
       </svg>
     )
   }
@@ -499,16 +499,15 @@ class RepeatTrack extends Component {
 
 class RepeatButton extends Component {
   render() {
-    console.log(this.props.parent.state.repeat)
     return (
       this.props.parent.state.repeat == 'off' &&
-      <RepeatOff/>
+      <RepeatOff parent={this.props.parent}/>
       ||
       this.props.parent.state.repeat == 'context' &&
-      <RepeatContext/>
+      <RepeatContext parent={this.props.parent}/>
       ||
       this.props.parent.state.repeat == 'track' &&
-      <RepeatTrack/>
+      <RepeatTrack parent={this.props.parent}/>
     )
   }
 }
@@ -585,7 +584,28 @@ class SkipForwardButton extends Component {
   }
 }
 
-class ShuffleButton extends Component {
+class ShuffleOn extends Component {
+  render() {
+    return (
+      <svg 
+      onClick={() => {
+        toggleShuffle(this.props.parent)
+      }}
+      style={{...StyleMediaButton}}
+      version="1.1" viewBox="0 0 535.78 535.78" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(57.812 120.53)" stroke={accentColor}>
+          <path d="m330.89 236.77c-214.43-0.80945-148.03-184.26-329.33-175.53" fill="none" strokeWidth="35"/>
+          <path transform="matrix(1.8522 0 0 -2.1858 .81152 -.033965)" d="m217.32-108.15-30.966 17.878v-35.757z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
+          <path d="m330.89 60.491c-214.43 0.80945-148.03 184.26-329.33 175.53" fill="none" strokeWidth="35"/>
+          <path transform="matrix(1.8522 0 0 2.1858 .81152 -.033965)" d="m217.32 27.878-30.966 17.878v-35.757z" fill={accentColor} strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
+        </g>
+        <circle cx="267.89" cy="267.89" r="264.58" fill="none" stroke={accentColor} strokeLinecap="round" strokeLinejoin="round" strokeOpacity=".50588" strokeWidth="6.6146"/>
+      </svg>
+    )
+  }
+}
+
+class ShuffleOff extends Component {
   render() {
     return (
       <svg 
@@ -601,6 +621,18 @@ class ShuffleButton extends Component {
           <path transform="matrix(1.8522 0 0 2.1858 .81152 -.033965)" d="m217.32 27.878-30.966 17.878v-35.757z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="17.395"/>
         </g>
       </svg>
+    )
+  }
+}
+
+class ShuffleButton extends Component {
+  render() {
+    return (
+      this.props.parent.state.shuffle
+      ?
+      <ShuffleOn parent={this.props.parent}/>
+      :
+      <ShuffleOff parent={this.props.parent}/>
     )
   }
 }
